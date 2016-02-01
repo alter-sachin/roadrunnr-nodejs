@@ -18,7 +18,7 @@ var HOSTS = {
   test      : 'http://128.199.241.199/'
 }
 
-var ROADRUNNER_OAUTH_JSON_PATH = './send_with_pi/roadrunnrOAuthSendWithPi.json';
+var ROADRUNNER_OAUTH_JSON_PATH = './RoadRunnrOAuth.json';
 
 var currentHost = HOSTS['production'];
 var logistics   = config['production'];
