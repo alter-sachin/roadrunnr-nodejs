@@ -1,8 +1,6 @@
 var requestJSON = require('request-json');
 var jsonfile    = require('jsonfile');
-// UNCOMMENT FOLLOWING LINE TO AUTO FIND LAT LONG
-// Copy the geoServices.js file into your repo
-// var geoCoder = require('./geoServices.js');
+var geoCoder    = require('./geoServices.js');
 
 var config = {
   'production' : {
