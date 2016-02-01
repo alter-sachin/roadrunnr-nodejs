@@ -60,7 +60,7 @@ Runnr.ship(function(error, response) {
 ```javascript
 Runnr.assignLatLng(function(error) {
   if (error) {
-    // Error assigning lat long for one of the address, please do so manually
+    // Error assigning lat long for one of the addresses, please do so manually
     console.error("Couldn't geocode the address")
   } else {
     Runnr.ship(function(error, response) {
