@@ -19,8 +19,8 @@ Runnr.OrderRequest.pickup.user.type                       = 'merchant';
 Runnr.OrderRequest.pickup.user.external_id                = 'FromID';
 Runnr.OrderRequest.pickup.user.full_address.address       = pickupAddress;
 Runnr.OrderRequest.pickup.user.full_address.city.name     = pickupCity;
-Runnr.OrderRequest.pickup.user.full_address.geo.latitude  = pickupGeo.lat;
-Runnr.OrderRequest.pickup.user.full_address.geo.longitude = pickupGeo.lng;
+Runnr.OrderRequest.pickup.user.full_address.geo.latitude  = pickupGeo.lat; // Use Step 3A to skip
+Runnr.OrderRequest.pickup.user.full_address.geo.longitude = pickupGeo.lng; // Use Step 3A to skip
 
 // Add drop details
 Runnr.OrderRequest.drop.user.name                       = dropName;
@@ -30,8 +30,8 @@ Runnr.OrderRequest.drop.user.type                       = 'customer';
 Runnr.OrderRequest.drop.user.external_id                = 'ToID';
 Runnr.OrderRequest.drop.user.full_address.address       = dropAddress;
 Runnr.OrderRequest.drop.user.full_address.city.name     = dropCity;
-Runnr.OrderRequest.drop.user.full_address.geo.latitude  = dropGeo.lat;
-Runnr.OrderRequest.drop.user.full_address.geo.longitude = dropGeo.lng;
+Runnr.OrderRequest.drop.user.full_address.geo.latitude  = dropGeo.lat; // Use Step 3A to skip
+Runnr.OrderRequest.drop.user.full_address.geo.longitude = dropGeo.lng; // Use Step 3A to skip
 
 // Order Details
 Runnr.OrderRequest.order_details.order_id                 = Order_ID;
