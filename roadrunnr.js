@@ -1,5 +1,8 @@
 var requestJSON = require('request-json');
 var jsonfile    = require('jsonfile');
+// UNCOMMENT FOLLOWING LINE TO AUTO FIND LAT LONG
+// Copy the geoServices.js file into your repo
+// var geoCoder = require('./geoServices.js');
 
 var config = {
   'production' : {
@@ -37,6 +40,26 @@ exports.Runnr = function() {
   this.OrderRequest = OrderRequest;
   this.ship = function(callback) {
     shipOrder(this, callback);
+  }
+  this.assignLatLng = function(callback) {
+    geoCoder.getLatLngForAddressString(this.OrderRequest.pickup.user.full_address.address, function(error, pickupGeo) {
+      if (error) {
+        callback(error);
+      } else {
+        geoCoder.getLatLngForAddressString(this.OrderRequest.drop.user.full_address.address, function(error, dropGeo) {
+          if (error) {
+            callback(error);
+          } else {
+            this.OrderRequest.pickup.user.full_address.geo.latitude  = pickupGeo.lat;
+            this.OrderRequest.pickup.user.full_address.geo.longitude = pickupGeo.lng;
+
+            this.OrderRequest.pickup.user.full_address.geo.latitude  = dropGeo.lat;
+            this.OrderRequest.pickup.user.full_address.geo.longitude = dropGeo.lng;
+            callback(null);
+          }
+        });
+      }
+    });
   }
 }
 
