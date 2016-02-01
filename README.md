@@ -55,3 +55,22 @@ Runnr.ship(function(error, response) {
   }
 });
 ```
+
+## Step 3A (Alternative if you don't have lat long for the address)
+```javascript
+Runnr.assignLatLng(function(error) {
+  if (error) {
+    // Error assigning lat long for one of the address, please do so manually
+    console.error("Couldn't geocode the address")
+  } else {
+    Runnr.ship(function(error, response) {
+      if (error) {
+        // Error from RoadRunnr
+        console.error(response);
+      } else {
+        console.log(response);
+      }
+    });
+  }
+});
+```
