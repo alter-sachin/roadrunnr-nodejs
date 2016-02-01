@@ -9,7 +9,7 @@ var config = {
   },
   'test' :{
     'CLIENT_ID'     : 'YOUR-TEST-CLIENT-ID',
-    'CLIENT_SECRET' : 'YOUR-TEST-CLIENT-ID',
+    'CLIENT_SECRET' : 'YOUR-TEST-CLIENT-SECRET',
   }
 }
 
