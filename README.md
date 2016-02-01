@@ -3,6 +3,21 @@ A NodeJS implementation for RoadRunnr delivery service
 
 Copy roadrunnr.js into your repo
 
+## Step 0
+Configure your keys in roadrunnr.js
+```javascript
+var config = {
+  'production' : {
+    'CLIENT_ID'     : 'YOUR-PRODUCTION-CLIENT-ID',
+    'CLIENT_SECRET' : 'YOUR-PRODUCTION-CLIENT-SECRET',
+  },
+  'test' :{
+    'CLIENT_ID'     : 'YOUR-TEST-CLIENT-ID',
+    'CLIENT_SECRET' : 'YOUR-TEST-CLIENT-ID',
+  }
+}
+```
+
 ## Step 1
 ```javascript
 var RoadRunnr = require('roadrunnr.js');
