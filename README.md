@@ -21,7 +21,7 @@ var config = {
 ## Step 1
 ```javascript
 var RoadRunnr = require('roadrunnr.js');
-var Runnr = new RoadRunnr.Runnr();
+var Runnr     = new RoadRunnr.Runnr();
 ```
 
 ## Step 2
