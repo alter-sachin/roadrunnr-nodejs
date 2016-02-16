@@ -1,5 +1,5 @@
-# Logistic Services
-A NodeJS implementation for RoadRunnr delivery service
+# RoadRunnr NodeJs
+A javascript wrapper for RoadRunnr delivery service
 
 Copy roadrunnr.js into your repo
 
