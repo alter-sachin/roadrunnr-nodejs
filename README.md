@@ -16,7 +16,7 @@ runnr.setKeys(CLIENT_ID, CLIENT_SECRET);
 * [Track shipment](#track_shipment)
 * [Cancel shipment](#cancel_shipment)
 * [Check serviceability](#check_serviceability)
-* [Auto assign lat long] (#assing_lat_long)
+* [Auto assign lat long](#assign_lat_long)
 
 ### <a name="create_shipment"></a>Create shipment
 ```javascript
@@ -61,7 +61,7 @@ runnr.createShipment(orderRequest, function(error, response) {
   console.log(response);
 });
 ```
-Roadrunnr allows you to skip the "locality" and "sub_locality" parameters if you provide the accurate lat & long for the addresses. I've added a geocoder which converts the address almost accurate lat long. [Instrutions here](#assing_lat_long).
+Roadrunnr allows you to skip the "locality" and "sub_locality" parameters if you provide the accurate lat & long for the addresses. I've added a geocoder which converts the address almost accurate lat long. [Instrutions here](#assign_lat_long).
 
 ### <a name="track_shipment"></a>Track shipment
 ```javascript
@@ -90,7 +90,7 @@ runnr.checkServiceability(orderRequest, function(error, response) {
 });
 ```
 
-### <a name="assing_lat_long"></a>Optional, auto assign lat & long
+### <a name="assign_lat_long"></a>Optional, auto assign lat & long
 Please run ```npm install geocoder``` before using the following function. You can skip the ```locality``` and ```sub_locality``` fields using this. 
 IMPORTANT NOTE : This function geocodes the address in ```orderRquest.pickup.user.full_address.address``` and ```orderRequest.drop.user.full_address.address```. Make sure this the complete address which includes the city name and the pin code.
 ```javascript
