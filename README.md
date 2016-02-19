@@ -17,6 +17,7 @@ runnr.setKeys(CLIENT_ID, CLIENT_SECRET);
 * [Cancel shipment](#cancel_shipment)
 * [Check serviceability](#check_serviceability)
 * [Auto assign lat long](#assign_lat_long)
+* [Use test environment](#set_test_environment)
 
 ### <a name="create_shipment"></a>Create shipment
 ```javascript
@@ -107,7 +108,7 @@ runnr.assignLatLong(orderRequest, function(error, newOrderRequest) {
 });
 ```
 
-#### Use test environment
+#### <a name="set_test_environment"></a>Use test environment
 To use Roadrunnr's test portal, just change the environment
 ```javascript
 runnr.setEnvironment('test');
