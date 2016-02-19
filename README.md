@@ -7,7 +7,7 @@ npm install roadrunnr
 
 ### Include and configure your keys
 ```javascript
-var runnr = require('roarunnr');
+var runnr = require('roadrunnr');
 runnr.setKeys(CLIENT_ID, CLIENT_SECRET);
 ```
 
