@@ -107,6 +107,12 @@ runnr.assignLatLong(orderRequest, function(error, newOrderRequest) {
 });
 ```
 
+#### Use test environment
+To use Roadrunnr's test portal, just change the environment
+```javascript
+runnr.setEnvironment('test');
+```
+
 ---
 ### Submit issues
 You can raise an issue in this repo or mail me at sidhant@hashexclude.com

@@ -1,6 +1,6 @@
 {
   "name": "roadrunnr",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A NodeJs wrapper for Roadrunnr logistic serrvices",
   "main": "roadrunnr.js",
   "scripts": {
