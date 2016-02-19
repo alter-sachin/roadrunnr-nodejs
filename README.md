@@ -1,91 +1,108 @@
-# RoadRunnr NodeJs
-A javascript wrapper for RoadRunnr delivery service
+# RoadRunnr NodeJs Wrapper
+A javascript wrapper for RoadRunnr delivery service. In-built OAuth. You don't need to worry about getting and maintaining an access token. Just set your keys and you are good to go!
 
-Copy roadrunnr.js into your repo
-
-## Step 0
-Configure your keys in roadrunnr.js
-```javascript
-var config = {
-  'production' : {
-    'CLIENT_ID'     : 'YOUR-PRODUCTION-CLIENT-ID',
-    'CLIENT_SECRET' : 'YOUR-PRODUCTION-CLIENT-SECRET',
-  },
-  'test' :{
-    'CLIENT_ID'     : 'YOUR-TEST-CLIENT-ID',
-    'CLIENT_SECRET' : 'YOUR-TEST-CLIENT-SECRET',
-  }
-}
+```
+npm install roadrunnr
 ```
 
-## Step 1
+### Include and configure your keys
 ```javascript
-var RoadRunnr = require('roadrunnr.js');
-var Runnr     = new RoadRunnr.Runnr();
+var runnr = require('roarunnr');
+runnr.setKeys(CLIENT_ID, CLIENT_SECRET);
 ```
 
-## Step 2
+### APIs available
+* [Create shipment](#create_shipment)
+* [Track shipment](#track_shipment)
+* [Cancel shipment](#cancel_shipment)
+* [Check serviceability](#check_serviceability)
+* [Auto assign lat long] (#assing_lat_long)
+
+### <a name="create_shipment"></a>Create shipment
 ```javascript
 // Add pickup details
-Runnr.OrderRequest.pickup.user.name                       = pickupName;
-Runnr.OrderRequest.pickup.user.phone_no                   = pickupNumber;
-Runnr.OrderRequest.pickup.user.email                      = pickupEmail;
-Runnr.OrderRequest.pickup.user.type                       = 'merchant';
-Runnr.OrderRequest.pickup.user.external_id                = 'FromID';
-Runnr.OrderRequest.pickup.user.full_address.address       = pickupAddress;
-Runnr.OrderRequest.pickup.user.full_address.city.name     = pickupCity;
-Runnr.OrderRequest.pickup.user.full_address.geo.latitude  = pickupGeo.lat; // Use Step 3A to skip
-Runnr.OrderRequest.pickup.user.full_address.geo.longitude = pickupGeo.lng; // Use Step 3A to skip
+orderRequest.pickup.user.name                           = '';
+orderRequest.pickup.user.phone_no                       = '';
+orderRequest.pickup.user.email                          = '';
+orderRequest.pickup.user.type                           = '';
+orderRequest.pickup.user.external_id                    = '';
+orderRequest.pickup.user.full_address.address           = '';
+orderRequest.pickup.user.full_address.locality.name     = ''; // Can be skipped, see below
+orderRequest.pickup.user.full_address.sub_locality.name = ''; // Can be skipped, see below
+orderRequest.pickup.user.full_address.city.name         = '';
+orderRequest.pickup.user.full_address.geo.latitude      = plat; // Optional
+orderRequest.pickup.user.full_address.geo.longitude     = plng; // Optional
+
 
 // Add drop details
-Runnr.OrderRequest.drop.user.name                       = dropName;
-Runnr.OrderRequest.drop.user.phone_no                   = dropNumber;
-Runnr.OrderRequest.drop.user.email                      = dropEmail;
-Runnr.OrderRequest.drop.user.type                       = 'customer';
-Runnr.OrderRequest.drop.user.external_id                = 'ToID';
-Runnr.OrderRequest.drop.user.full_address.address       = dropAddress;
-Runnr.OrderRequest.drop.user.full_address.city.name     = dropCity;
-Runnr.OrderRequest.drop.user.full_address.geo.latitude  = dropGeo.lat; // Use Step 3A to skip
-Runnr.OrderRequest.drop.user.full_address.geo.longitude = dropGeo.lng; // Use Step 3A to skip
+orderRequest.drop.user.name                             = '';
+orderRequest.drop.user.phone_no                         = '';
+orderRequest.drop.user.email                            = '';
+orderRequest.drop.user.type                             = '';
+orderRequest.drop.user.external_id                      = '';
+orderRequest.drop.user.full_address.address             = '';
+orderRequest.pickup.user.full_address.locality.name     = ''; // Can be skipped, see below
+orderRequest.pickup.user.full_address.sub_locality.name = ''; // Can be skipped, see below
+orderRequest.pickup.user.full_address.city.name         = '';
+orderRequest.drop.user.full_address.geo.latitude        = dlat; // Optional
+orderRequest.drop.user.full_address.geo.longitude       = dlng; // Optional
 
 // Order Details
-Runnr.OrderRequest.order_details.order_id                 = Order_ID;
-Runnr.OrderRequest.order_details.order_value              = Order_Value;
-Runnr.OrderRequest.order_details.amount_to_be_collected   = Amount_To_Be_Collected;
-Runnr.OrderRequest.order_details.order_type.name          = 'CashOnDelivery';
-Runnr.OrderRequest.order_details.order_items[0].quantity  = quantity;
-Runnr.OrderRequest.order_details.order_items[0].price     = price;
-Runnr.OrderRequest.order_details.order_items[0].item.name = itemName;
-Runnr.OrderRequest.order_details.created_at               = "yyyy-mm-dd hh: MM";
-```
+orderRequest.order_details.order_id                 = '';
+orderRequest.order_details.order_value              = '0';
+orderRequest.order_details.amount_to_be_collected   = '0';
+orderRequest.order_details.order_type.name          = 'CashOnDelivery';
+orderRequest.order_details.order_items[0].quantity  = 1;
+orderRequest.order_details.order_items[0].price     = 0;
+orderRequest.order_details.order_items[0].item.name = '';
+orderRequest.order_details.created_at               = "YYYY-MM-DD hh: MM";
 
-## Step 3
+runnr.createShipment(orderRequest, function(error, response) {
+  console.log(response);
+});
+```
+Roadrunnr allows you to skip the "locality" and "sub_locality" parameters if you provide the accurate lat & long for the addresses. I've added a geocoder which converts the address almost accurate lat long. [Instrutions here](#assing_lat_long).
+
+### <a name="track_shipment"></a>Track shipment
 ```javascript
-Runnr.ship(function(error, response) {
-  if (error) {
-    // Error from RoadRunnr
-    console.error(response);
-  } else {
+runnr.trackShipment(id, function(error, response) {
+  if (error == null) {
     console.log(response);
   }
 });
 ```
 
-## Step 3A (Alternative if you don't have lat long for the address)
+### <a name="cancel_shipment"></a>Cancel shipment
 ```javascript
-Runnr.assignLatLng(function(error) {
+runnr.cancelShipment(id, function(error, response) {
+  if (error == null) {
+    console.log(response);
+  }
+});
+```
+
+### <a name="check_serviceability"></a>Check serviceability
+```javasript
+runnr.checkServiceability(orderRequest, function(error, response) {
+  if (error == null) {
+    console.log(response);
+  }
+});
+```
+
+### <a name="assing_lat_long"></a>Optional, auto assign lat & long
+Please run ```npm install geocoder``` before using the following function. You can skip the ```locality``` and ```sub_locality``` fields using this. 
+IMPORTANT NOTE : This function geocodes the address in ```orderRquest.pickup.user.full_address.address``` and ```orderRequest.drop.user.full_address.address```. Make sure this the complete address which includes the city name and the pin code.
+```javascript
+runnr.assignLatLong(orderRequest, function(error, newOrderRequest) {
   if (error) {
-    // Error assigning lat long for one of the addresses, please do so manually
-    console.error("Couldn't geocode the address")
+    // There was some error geocoding one of the addresses
   } else {
-    Runnr.ship(function(error, response) {
-      if (error) {
-        // Error from RoadRunnr
-        console.error(response);
-      } else {
+    runnr.createShipment(newOrderRequest, function(error, response) {
+      if (error == null) {
         console.log(response);
       }
-    });
+    }
   }
 });
 ```
