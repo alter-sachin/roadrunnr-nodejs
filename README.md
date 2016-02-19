@@ -83,7 +83,7 @@ runnr.cancelShipment(id, function(error, response) {
 ```
 
 ### <a name="check_serviceability"></a>Check serviceability
-```javasript
+```javascript
 runnr.checkServiceability(orderRequest, function(error, response) {
   if (error == null) {
     console.log(response);
