@@ -1,5 +1,5 @@
-var request  = require('request');
-var jsonfile = require('jsonfile');
+var request = require('request');
+var fs      = require('fs');
 
 var HOSTS = {
   production : 'http://roadrunnr.in/',
@@ -81,8 +81,8 @@ var OrderRequest = {
 
 var API = {
   SHIP           : 'v1/orders/ship',
-  CANCEL         : 'v1/orders/', // + roadrunnerId + /cancel // To be implemented
-  TRACK          : 'v1/orders/', // + roadrunnerId + /cancel // To be implemented
+  CANCEL         : 'v1/orders/',
+  TRACK          : 'v1/orders/',
   SERVICEABILITY : 'v1/orders/serviceability/',
 }
 
@@ -117,7 +117,7 @@ module.exports = {
 
   createShipment : function(orderRequest, callback) {
     var env = this.env;
-    getOAuthToken(this.oauth_json_path, this.config, function(error, token) {
+    getOAuthToken(this.oauth_json_path, this.config, env, function(error, token) {
       request.post({
         headers : {
           'cache-control' : 'no-cache',
@@ -140,7 +140,7 @@ module.exports = {
 
   trackShipment : function(id, callback) {
     var env = this.env;
-    getOAuthToken(this.oauth_json_path, this.config, function(error, token) {
+    getOAuthToken(this.oauth_json_path, this.config, env, function(error, token) {
       request.get({
         headers : {
           'cache-control' : 'no-cache',
@@ -162,7 +162,7 @@ module.exports = {
 
   checkServiceability : function(orderRequest, callback) {
     var env = this.env;
-    getOAuthToken(this.oauth_json_path, this.config, function(error, token) {
+    getOAuthToken(this.oauth_json_path, this.config, env, function(error, token) {
       request.post({
         headers : {
           'cache-control' : 'no-cache',
@@ -185,7 +185,7 @@ module.exports = {
 
   cancelShipment : function(id, callback) {
     var env = this.env;
-    getOAuthToken(this.oauth_json_path, this.config, function(error, token) {
+    getOAuthToken(this.oauth_json_path, this.config, env, function(error, token) {
       request.get({
         headers : {
           'cache-control' : 'no-cache',
@@ -228,35 +228,41 @@ module.exports = {
   },
 }
 
-function getOAuthToken(path, config, callback) {
-  jsonfile.readFile(path, function(err, obj) {
+function getOAuthToken(path, config, env, callback) {
+  readFile(path, function(err, obj) {
     if (err) {
-      getNewToken(path, config, callback);
+      getNewToken(path, config, env, callback);
     } else {
       callback(null, obj.access_token);
     }
   });
 }
 
-function getNewToken(path, config, callback) {
+function getNewToken(path, config, env, callback) {
   var getTokenEP = 'oauth/token?grant_type=client_credentials&client_id=' + config.CLIENT_ID + '&client_secret=' + config.CLIENT_SECRET;
-  client.get(getTokenEP, function(error, response, body) {
-    if (error) {
-      console.error("Request error: " + error);
-      callback(error, response);
-    } else {
+  request.get({
+    headers : {
+      'cache-control' : 'no-cache',
+      'content-type'  : 'Application/JSOn',
+    },
+    url     : HOSTS[env] + getTokenEP,
+    json    : true,
+  }, function(error, response, body) {
+    if (error == null) {
       if (body.error) {
         console.error("Error returned from Roadrunnr: ", body.error);
         console.log("Results: " + body);
         callback(body.error, body);
       } else {
-        jsonfile.writeFile(path, body, function (err) {
+        writeFile(path, body, function (err) {
           if (err) {
             console.error('Write error: ' + err);
           }
           callback(err, body.access_token);
         });
       }
+    } else {
+      callback(error, error);
     }
   });
 }
@@ -280,4 +286,45 @@ function getLatLngForAddress(addressString, callback) {
       }
     }
   });
+}
+
+function readFile (file, options, callback) {
+  if (callback == null) {
+    callback = options
+    options = {}
+  }
+
+  fs.readFile(file, options, function (err, data) {
+    if (err) return callback(err)
+
+    var obj
+    try {
+      obj = JSON.parse(data, options ? options.reviver : null)
+    } catch (err2) {
+      err2.message = file + ': ' + err2.message
+      return callback(err2)
+    }
+    callback(null, obj)
+  })
+}
+
+function writeFile (file, obj, options, callback) {
+  if (callback == null) {
+    callback = options
+    options = {}
+  }
+
+  var spaces = typeof options === 'object' && options !== null
+    ? 'spaces' in options
+    ? options.spaces : this.spaces
+    : this.spaces
+
+  var str = ''
+  try {
+    str = JSON.stringify(obj, options ? options.replacer : null, spaces) + '\n'
+  } catch (err) {
+    if (callback) return callback(err, null)
+  }
+
+  fs.writeFile(file, str, options, callback)
 }
