@@ -106,3 +106,7 @@ runnr.assignLatLong(orderRequest, function(error, newOrderRequest) {
   }
 });
 ```
+
+---
+### Submit issues
+You can raise an issue in this repo or mail me at sidhant@hashexclude.com
