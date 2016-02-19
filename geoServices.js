@@ -1,1 +1,0 @@
-var geocoder    = require('geocoder');

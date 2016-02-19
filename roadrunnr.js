@@ -1,10 +1,9 @@
-var requestJSON = require('request-json');
-var jsonfile    = require('jsonfile');
-var geocoder    = require('geocoder');
+var request  = require('request');
+var jsonfile = require('jsonfile');
 
 var HOSTS = {
-  production: 'http://roadrunnr.in/',
-  test      : 'http://128.199.241.199/'
+  production : 'http://roadrunnr.in/',
+  test       : 'http://128.199.241.199/'
 }
 
 var OrderRequest = {
@@ -80,9 +79,6 @@ var OrderRequest = {
   callback_url: '',
 }
 
-var currentHost = HOSTS['production'];
-var logistics   = config['production'];
-
 var API = {
   SHIP           : 'v1/orders/ship',
   CANCEL         : 'v1/orders/', // + roadrunnerId + /cancel // To be implemented
@@ -90,16 +86,13 @@ var API = {
   SERVICEABILITY : 'v1/orders/serviceability/',
 }
 
-var client = requestJSON.createClient(currentHost);
-client.headers['cache-control'] = 'no-cache';
-client.headers['content-type'] = 'Application/JSOn';
-
 module.exports = {
+  'env'             : 'production',
   'oauth_json_path' : './RoadRunnrOAuth.json',
   'config'          : {
     'CLIENT_ID'     : 'YOUR-PRODUCTION-CLIENT-ID',
     'CLIENT_SECRET' : 'YOUR-PRODUCTION-CLIENT-SECRET',
-  }
+  },
 
   setRoadrunnrOAuthPath : function(path) {
     this.oauth_json_path = path;
@@ -110,39 +103,109 @@ module.exports = {
     this.config.CLIENT_SECRET = clientSecret;
   },
 
+  setEnvironment : function(env) {
+    if (env == "test" || env == "production") {
+      this.env = env;
+    } else {
+      console.error('Invalid environment. Valid options : ["test, "production"]')
+    }
+  },
+
   OrderRequest : function() {
     return OrderRequest;
   },
 
   createShipment : function(orderRequest, callback) {
-    getOAuthToken(function(error, token) {
-      client.headers['authorization'] = 'Token ' + token;
-      client.post(API.SHIP, orderRequest, function(error, response, body) {
+    var env = this.env;
+    getOAuthToken(this.oauth_json_path, this.config, function(error, token) {
+      request.post({
+        headers : {
+          'cache-control' : 'no-cache',
+          'content-type'  : 'Application/JSOn',
+          'authorization' : 'Token ' + token,
+        },
+        url     : HOSTS[env] + API.SHIP,
+        body    : orderRequest,
+        json    : true,
+      }, function(error, response, body){
         if (error) {
           console.error("Request error: " + error);
           callback(error, null);
         } else {
-          if (response.statusCode == 200) {
-            if (body.status.code != 200) {
-              callback(body.status.code, body);
-            } else {
-              // Roadrunnr Success
-              callback(null, body);
-            }
-          } else if (response.statusCode == 401) {
-            // Token has expired, need to refresh
-            console.log('Roadrunnr credentials have expired. Requesting new tokens.');
-            getNewToken(function(error, token) {
-              this.createShipment(orderRequest, callback);
-            });
-          } else {
-            callback(response.statusCode, null);
-          }
+          callback(null, body);
         }
       });
     });
   },
 
+  trackShipment : function(id, callback) {
+    var env = this.env;
+    getOAuthToken(this.oauth_json_path, this.config, function(error, token) {
+      request.get({
+        headers : {
+          'cache-control' : 'no-cache',
+          'content-type'  : 'Application/JSOn',
+          'authorization' : 'Token ' + token,
+        },
+        url     : HOSTS[env] + API.TRACK + '/' + id + '/track/',
+        json    : true,
+      }, function(error, response, body){
+        if (error) {
+          console.error("Request error: " + error);
+          callback(error, null);
+        } else {
+          callback(null, body);
+        }
+      });
+    });
+  },
+
+  checkServiceability : function(orderRequest, callback) {
+    var env = this.env;
+    getOAuthToken(this.oauth_json_path, this.config, function(error, token) {
+      request.post({
+        headers : {
+          'cache-control' : 'no-cache',
+          'content-type'  : 'Application/JSOn',
+          'authorization' : 'Token ' + token,
+        },
+        url     : HOSTS[env] + API.SERVICEABILITY,
+        body    : orderRequest,
+        json    : true,
+      }, function(error, response, body){
+        if (error) {
+          console.error("Request error: " + error);
+          callback(error, null);
+        } else {
+          callback(null, body);
+        }
+      });
+    });
+  },
+
+  cancelShipment : function(id, callback) {
+    var env = this.env;
+    getOAuthToken(this.oauth_json_path, this.config, function(error, token) {
+      request.get({
+        headers : {
+          'cache-control' : 'no-cache',
+          'content-type'  : 'Application/JSOn',
+          'authorization' : 'Token ' + token,
+        },
+        url     : HOSTS[env] + API.TRACK + '/' + id + '/cancel/',
+        json    : true,
+      }, function(error, response, body){
+        if (error) {
+          console.error("Request error: " + error);
+          callback(error, null);
+        } else {
+          callback(null, body);
+        }
+      });
+    });
+  },
+
+  // Optional, requires 'geocoder' npm module
   assignLatLong : function(orderRequest, callback) {
     getLatLngForAddress(orderRequest.pickup.user.full_address.address, function(error, pickupGeo) {
       if (error) {
@@ -155,51 +218,51 @@ module.exports = {
             orderRequest.pickup.user.full_address.geo.latitude  = pickupGeo.lat;
             orderRequest.pickup.user.full_address.geo.longitude = pickupGeo.lng;
 
-            orderRequest.pickup.user.full_address.geo.latitude  = dropGeo.lat;
-            orderRequest.pickup.user.full_address.geo.longitude = dropGeo.lng;
+            orderRequest.drop.user.full_address.geo.latitude  = dropGeo.lat;
+            orderRequest.drop.user.full_address.geo.longitude = dropGeo.lng;
             callback(null, orderRequest);
           }
         });
       }
     });
   },
+}
 
-  function getOAuthToken(callback) {
-    jsonfile.readFile(this.oauth_json_path, function(err, obj) {
-      if (err) {
-        getNewToken(callback);
-      } else {
-        callback(null, obj.access_token);
-      }
-    });
-  },
+function getOAuthToken(path, config, callback) {
+  jsonfile.readFile(path, function(err, obj) {
+    if (err) {
+      getNewToken(path, config, callback);
+    } else {
+      callback(null, obj.access_token);
+    }
+  });
+}
 
-  function getNewToken(path, callback) {
-    var getTokenEP = 'oauth/token?grant_type=client_credentials&client_id=' + config.CLIENT_ID + '&client_secret=' + config.CLIENT_SECRET;
-    client.get(getTokenEP, function(error, response, body) {
-      if (error) {
-        console.error("Request error: " + error);
-        callback(error, response);
+function getNewToken(path, config, callback) {
+  var getTokenEP = 'oauth/token?grant_type=client_credentials&client_id=' + config.CLIENT_ID + '&client_secret=' + config.CLIENT_SECRET;
+  client.get(getTokenEP, function(error, response, body) {
+    if (error) {
+      console.error("Request error: " + error);
+      callback(error, response);
+    } else {
+      if (body.error) {
+        console.error("Error returned from Roadrunnr: ", body.error);
+        console.log("Results: " + body);
+        callback(body.error, body);
       } else {
-        if (body.error) {
-          console.error("Error returned from Roadrunnr: ", body.error);
-          console.log("Results: " + body);
-          callback(body.error, body);
-        } else {
-          console.log("Results: " + body);
-          jsonfile.writeFile(path, body, function (err) {
-            if (err) {
-              console.error('Write error: ' + err);
-            }
-            callback(err, body.access_token);
-          });
-        }
+        jsonfile.writeFile(path, body, function (err) {
+          if (err) {
+            console.error('Write error: ' + err);
+          }
+          callback(err, body.access_token);
+        });
       }
-    });
-  },
+    }
+  });
 }
 
 function getLatLngForAddress(addressString, callback) {
+  var geocoder = require('geocoder');
   addressString = addressString.replace(/,/g, ""); // Stripping unwanted commas
   geocoder.geocode(addressString, function (err, data) {
     if (err) {
