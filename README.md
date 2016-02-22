@@ -22,6 +22,8 @@ runnr.setKeys(CLIENT_ID, CLIENT_SECRET);
 ### <a name="create_shipment"></a>Create shipment
 ```javascript
 // Add pickup details
+var orderRequest = new runnr.OrderRequest();
+
 orderRequest.pickup.user.name                           = '';
 orderRequest.pickup.user.phone_no                       = '';
 orderRequest.pickup.user.email                          = '';
@@ -42,9 +44,9 @@ orderRequest.drop.user.email                            = '';
 orderRequest.drop.user.type                             = '';
 orderRequest.drop.user.external_id                      = '';
 orderRequest.drop.user.full_address.address             = '';
-orderRequest.pickup.user.full_address.locality.name     = ''; // Can be skipped, see below
-orderRequest.pickup.user.full_address.sub_locality.name = ''; // Can be skipped, see below
-orderRequest.pickup.user.full_address.city.name         = '';
+orderRequest.drop.user.full_address.locality.name     = ''; // Can be skipped, see below
+orderRequest.drop.user.full_address.sub_locality.name = ''; // Can be skipped, see below
+orderRequest.drop.user.full_address.city.name         = '';
 orderRequest.drop.user.full_address.geo.latitude        = dlat; // Optional
 orderRequest.drop.user.full_address.geo.longitude       = dlng; // Optional
 
@@ -109,7 +111,7 @@ runnr.assignLatLong(orderRequest, function(error, newOrderRequest) {
 ```
 
 #### <a name="set_test_environment"></a>Use test environment
-To use Roadrunnr's test portal, just change the environment
+To use Roadrunnr's test portal, just change the environment. This module uses the production server by default.
 ```javascript
 runnr.setEnvironment('test');
 ```
