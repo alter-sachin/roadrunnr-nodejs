@@ -21,9 +21,9 @@ runnr.setKeys(CLIENT_ID, CLIENT_SECRET);
 
 ### <a name="create_shipment"></a>Create shipment
 ```javascript
-// Add pickup details
 var orderRequest = new runnr.OrderRequest();
 
+// Add pickup details
 orderRequest.pickup.user.name                           = '';
 orderRequest.pickup.user.phone_no                       = '';
 orderRequest.pickup.user.email                          = '';
