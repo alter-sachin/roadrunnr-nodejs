@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Roadrunnr NodeJs by sidhantpanda</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Roadrunnr NodeJs</h1>
+      <h2 class="project-tagline">A NodeJS wrapper for RoadRunnr delivery service</h2>
+      <a href="https://github.com/sidhantpanda/roadrunnr-nodejs" class="btn">View on GitHub</a>
+      <a href="https://github.com/sidhantpanda/roadrunnr-nodejs/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/sidhantpanda/roadrunnr-nodejs/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="roadrunnr-nodejs-wrapper" class="anchor" href="#roadrunnr-nodejs-wrapper" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>RoadRunnr NodeJs Wrapper</h1>
+
+<p>A javascript wrapper for RoadRunnr delivery service. In-built OAuth. You don't need to worry about getting and maintaining an access token. Just set your keys and you are good to go!</p>
+
+<pre><code>npm install roadrunnr
+</code></pre>
+
+<h3>
+<a id="include-and-configure-your-keys" class="anchor" href="#include-and-configure-your-keys" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Include and configure your keys</h3>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> runnr <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>roadrunnr<span class="pl-pds">'</span></span>);
+<span class="pl-smi">runnr</span>.<span class="pl-en">setKeys</span>(<span class="pl-c1">CLIENT_ID</span>, <span class="pl-c1">CLIENT_SECRET</span>);</pre></div>
+
+<h3>
+<a id="apis-available" class="anchor" href="#apis-available" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>APIs available</h3>
+
+<ul>
+<li><a href="#create_shipment">Create shipment</a></li>
+<li><a href="#track_shipment">Track shipment</a></li>
+<li><a href="#cancel_shipment">Cancel shipment</a></li>
+<li><a href="#check_serviceability">Check serviceability</a></li>
+<li><a href="#assign_lat_long">Auto assign lat long</a></li>
+<li><a href="#set_test_environment">Use test environment</a></li>
+</ul>
+
+<h3>
+<a id="create-shipment" class="anchor" href="#create-shipment" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a name="create_shipment"></a>Create shipment</h3>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// Add pickup details</span>
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-c1">name</span>                           <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">phone_no</span>                       <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">email</span>                          <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-c1">type</span>                           <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">external_id</span>                    <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">address</span>           <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">locality</span>.<span class="pl-c1">name</span>     <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>; <span class="pl-c">// Can be skipped, see below</span>
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">sub_locality</span>.<span class="pl-c1">name</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>; <span class="pl-c">// Can be skipped, see below</span>
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">city</span>.<span class="pl-c1">name</span>         <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">geo</span>.<span class="pl-smi">latitude</span>      <span class="pl-k">=</span> plat; <span class="pl-c">// Optional</span>
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">geo</span>.<span class="pl-smi">longitude</span>     <span class="pl-k">=</span> plng; <span class="pl-c">// Optional</span>
+
+
+<span class="pl-c">// Add drop details</span>
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-c1">name</span>                             <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">phone_no</span>                         <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">email</span>                            <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-c1">type</span>                             <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">external_id</span>                      <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">address</span>             <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">locality</span>.<span class="pl-c1">name</span>     <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>; <span class="pl-c">// Can be skipped, see below</span>
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">sub_locality</span>.<span class="pl-c1">name</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>; <span class="pl-c">// Can be skipped, see below</span>
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">city</span>.<span class="pl-c1">name</span>         <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">geo</span>.<span class="pl-smi">latitude</span>        <span class="pl-k">=</span> dlat; <span class="pl-c">// Optional</span>
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">geo</span>.<span class="pl-smi">longitude</span>       <span class="pl-k">=</span> dlng; <span class="pl-c">// Optional</span>
+
+<span class="pl-c">// Order Details</span>
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">order_details</span>.<span class="pl-smi">order_id</span>                 <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">order_details</span>.<span class="pl-smi">order_value</span>              <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>0<span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">order_details</span>.<span class="pl-smi">amount_to_be_collected</span>   <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>0<span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">order_details</span>.<span class="pl-smi">order_type</span>.<span class="pl-c1">name</span>          <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>CashOnDelivery<span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">order_details</span>.<span class="pl-smi">order_items</span>[<span class="pl-c1">0</span>].<span class="pl-smi">quantity</span>  <span class="pl-k">=</span> <span class="pl-c1">1</span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">order_details</span>.<span class="pl-smi">order_items</span>[<span class="pl-c1">0</span>].<span class="pl-smi">price</span>     <span class="pl-k">=</span> <span class="pl-c1">0</span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">order_details</span>.<span class="pl-smi">order_items</span>[<span class="pl-c1">0</span>].<span class="pl-smi">item</span>.<span class="pl-c1">name</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">order_details</span>.<span class="pl-smi">created_at</span>               <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>YYYY-MM-DD hh: MM<span class="pl-pds">"</span></span>;
+
+<span class="pl-smi">runnr</span>.<span class="pl-en">createShipment</span>(orderRequest, <span class="pl-k">function</span>(<span class="pl-smi">error</span>, <span class="pl-smi">response</span>) {
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(response);
+});</pre></div>
+
+<p>Roadrunnr allows you to skip the "locality" and "sub_locality" parameters if you provide the accurate lat &amp; long for the addresses. I've added a geocoder which converts the address almost accurate lat long. <a href="#assign_lat_long">Instrutions here</a>.</p>
+
+<h3>
+<a id="track-shipment" class="anchor" href="#track-shipment" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a name="track_shipment"></a>Track shipment</h3>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">runnr</span>.<span class="pl-en">trackShipment</span>(id, <span class="pl-k">function</span>(<span class="pl-smi">error</span>, <span class="pl-smi">response</span>) {
+  <span class="pl-k">if</span> (error <span class="pl-k">==</span> <span class="pl-c1">null</span>) {
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(response);
+  }
+});</pre></div>
+
+<h3>
+<a id="cancel-shipment" class="anchor" href="#cancel-shipment" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a name="cancel_shipment"></a>Cancel shipment</h3>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">runnr</span>.<span class="pl-en">cancelShipment</span>(id, <span class="pl-k">function</span>(<span class="pl-smi">error</span>, <span class="pl-smi">response</span>) {
+  <span class="pl-k">if</span> (error <span class="pl-k">==</span> <span class="pl-c1">null</span>) {
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(response);
+  }
+});</pre></div>
+
+<h3>
+<a id="check-serviceability" class="anchor" href="#check-serviceability" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a name="check_serviceability"></a>Check serviceability</h3>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">runnr</span>.<span class="pl-en">checkServiceability</span>(orderRequest, <span class="pl-k">function</span>(<span class="pl-smi">error</span>, <span class="pl-smi">response</span>) {
+  <span class="pl-k">if</span> (error <span class="pl-k">==</span> <span class="pl-c1">null</span>) {
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(response);
+  }
+});</pre></div>
+
+<h3>
+<a id="optional-auto-assign-lat--long" class="anchor" href="#optional-auto-assign-lat--long" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a name="assign_lat_long"></a>Optional, auto assign lat &amp; long</h3>
+
+<p>Please run <code>npm install geocoder</code> before using the following function. You can skip the <code>locality</code> and <code>sub_locality</code> fields using this. 
+IMPORTANT NOTE : This function geocodes the address in <code>orderRquest.pickup.user.full_address.address</code> and <code>orderRequest.drop.user.full_address.address</code>. Make sure this the complete address which includes the city name and the pin code.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">runnr</span>.<span class="pl-en">assignLatLong</span>(orderRequest, <span class="pl-k">function</span>(<span class="pl-smi">error</span>, <span class="pl-smi">newOrderRequest</span>) {
+  <span class="pl-k">if</span> (error) {
+    <span class="pl-c">// There was some error geocoding one of the addresses</span>
+  } <span class="pl-k">else</span> {
+    <span class="pl-smi">runnr</span>.<span class="pl-en">createShipment</span>(newOrderRequest, <span class="pl-k">function</span>(<span class="pl-smi">error</span>, <span class="pl-smi">response</span>) {
+      <span class="pl-k">if</span> (error <span class="pl-k">==</span> <span class="pl-c1">null</span>) {
+        <span class="pl-en">console</span>.<span class="pl-c1">log</span>(response);
+      }
+    }
+  }
+});</pre></div>
+
+<h4>
+<a id="use-test-environment" class="anchor" href="#use-test-environment" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a name="set_test_environment"></a>Use test environment</h4>
+
+<p>To use Roadrunnr's test portal, just change the environment</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">runnr</span>.<span class="pl-en">setEnvironment</span>(<span class="pl-s"><span class="pl-pds">'</span>test<span class="pl-pds">'</span></span>);</pre></div>
+
+<hr>
+
+<h3>
+<a id="submit-issues" class="anchor" href="#submit-issues" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Submit issues</h3>
+
+<p>You can raise an issue in this repo or mail me at <a href="mailto:sidhant@hashexclude.com">sidhant@hashexclude.com</a></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/sidhantpanda/roadrunnr-nodejs">Roadrunnr NodeJs</a> is maintained by <a href="https://github.com/sidhantpanda">sidhantpanda</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
