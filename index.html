@@ -48,7 +48,9 @@
 <h3>
 <a id="create-shipment" class="anchor" href="#create-shipment" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a name="create_shipment"></a>Create shipment</h3>
 
-<div class="highlight highlight-source-js"><pre><span class="pl-c">// Add pickup details</span>
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> orderRequest <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">runnr.OrderRequest</span>();
+
+<span class="pl-c">// Add pickup details</span>
 <span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-c1">name</span>                           <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
 <span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">phone_no</span>                       <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
 <span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">email</span>                          <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
@@ -69,9 +71,9 @@
 <span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-c1">type</span>                             <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
 <span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">external_id</span>                      <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
 <span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">address</span>             <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
-<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">locality</span>.<span class="pl-c1">name</span>     <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>; <span class="pl-c">// Can be skipped, see below</span>
-<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">sub_locality</span>.<span class="pl-c1">name</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>; <span class="pl-c">// Can be skipped, see below</span>
-<span class="pl-smi">orderRequest</span>.<span class="pl-smi">pickup</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">city</span>.<span class="pl-c1">name</span>         <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">locality</span>.<span class="pl-c1">name</span>     <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>; <span class="pl-c">// Can be skipped, see below</span>
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">sub_locality</span>.<span class="pl-c1">name</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>; <span class="pl-c">// Can be skipped, see below</span>
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">city</span>.<span class="pl-c1">name</span>         <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
 <span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">geo</span>.<span class="pl-smi">latitude</span>        <span class="pl-k">=</span> dlat; <span class="pl-c">// Optional</span>
 <span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">geo</span>.<span class="pl-smi">longitude</span>       <span class="pl-k">=</span> dlng; <span class="pl-c">// Optional</span>
 
@@ -139,7 +141,7 @@ IMPORTANT NOTE : This function geocodes the address in <code>orderRquest.pickup.
 <h4>
 <a id="use-test-environment" class="anchor" href="#use-test-environment" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a name="set_test_environment"></a>Use test environment</h4>
 
-<p>To use Roadrunnr's test portal, just change the environment</p>
+<p>To use Roadrunnr's test portal, just change the environment. This module uses the production server by default.</p>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-smi">runnr</span>.<span class="pl-en">setEnvironment</span>(<span class="pl-s"><span class="pl-pds">'</span>test<span class="pl-pds">'</span></span>);</pre></div>
 
