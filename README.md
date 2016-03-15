@@ -37,8 +37,8 @@ orderRequest.pickup.user.full_address.address           = '';
 orderRequest.pickup.user.full_address.locality.name     = ''; // Can be skipped, see below
 orderRequest.pickup.user.full_address.sub_locality.name = ''; // Can be skipped, see below
 orderRequest.pickup.user.full_address.city.name         = '';
-orderRequest.pickup.user.full_address.geo.latitude      = plat; // Optional
-orderRequest.pickup.user.full_address.geo.longitude     = plng; // Optional
+orderRequest.pickup.user.full_address.geo.latitude      = "plat"; // Optional, string format
+orderRequest.pickup.user.full_address.geo.longitude     = "plng"; // Optional, string format
 
 
 // Add drop details
@@ -51,8 +51,8 @@ orderRequest.drop.user.full_address.address             = '';
 orderRequest.drop.user.full_address.locality.name     = ''; // Can be skipped, see below
 orderRequest.drop.user.full_address.sub_locality.name = ''; // Can be skipped, see below
 orderRequest.drop.user.full_address.city.name         = '';
-orderRequest.drop.user.full_address.geo.latitude        = dlat; // Optional
-orderRequest.drop.user.full_address.geo.longitude       = dlng; // Optional
+orderRequest.drop.user.full_address.geo.latitude        = "dlat"; // Optional, string format
+orderRequest.drop.user.full_address.geo.longitude       = "dlng"; // Optional, string format
 
 // Order Details
 orderRequest.order_details.order_id                 = '';
