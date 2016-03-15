@@ -105,7 +105,7 @@ runnr.assignLatLong(orderRequest, function(error, newOrderRequest) {
       if (error == null) {
         console.log(response);
       }
-    }
+    });
   }
 });
 ```
@@ -114,6 +114,12 @@ runnr.assignLatLong(orderRequest, function(error, newOrderRequest) {
 To use Roadrunnr's test portal, just change the environment. This module uses the production server by default.
 ```javascript
 runnr.setEnvironment('test');
+```
+
+#### (OPTIONAL) Change OAuth token filepath
+To use Roadrunnr's test portal, just change the environment. This module uses the production server by default.
+```javascript
+runnr.setOAuthPath('./path/to/OAuth/file.json');
 ```
 
 ---

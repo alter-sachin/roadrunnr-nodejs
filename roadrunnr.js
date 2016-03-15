@@ -4,7 +4,7 @@ var fs      = require('fs');
 var HOSTS = {
   production : 'http://roadrunnr.in/',
   test       : 'http://128.199.241.199/'
-}
+};
 
 var OrderRequest = {
   pickup: {
@@ -12,50 +12,50 @@ var OrderRequest = {
       name: '',
       phone_no: '',
       email: '',
-      type: 'merchant',
-      external_id: 'BLR-aafe',
+      type: '',
+      external_id: '',
       full_address: {
         address: '',
         locality: {
-         name: '',
+         name: ''
         },
         sub_locality: {
-         name: '',
+         name: ''
         },
         city: {
-          name: '',
+          name: ''
         },
         geo: {
           latitude: '',
-          longitude: '',
-        },
-      },
-    },
+          longitude: ''
+        }
+      }
+    }
   },
   drop: {
     user: {
       name: '',
       phone_no: '',
       email: '',
-      type: 'customer',
-      external_id: 'BLR-aafe',
+      type: '',
+      external_id: '',
       full_address: {
         address: '',
         locality: {
-         name: '',
+         name: ''
         },
         sub_locality: {
-         name: '',
+         name: ''
         },
         city: {
-          name: '',
+          name: ''
         },
         geo: {
           latitude: '',
-          longitude: '',
-        },
-      },
-    },
+          longitude: ''
+        }
+      }
+    }
   },
   order_details: {
     order_id: '',
@@ -63,38 +63,38 @@ var OrderRequest = {
     amount_to_be_collected: '',
     expected_delivery_time: '',
     order_type: {
-      name: '',
+      name: ''
     },
     order_items: [
       {
         quantity: 0,
         price: 0,
         item: {
-          name: '',
+          name: ''
         }
-      },
+      }
     ],
-    created_at : '',
+    created_at : ''
   },
-  callback_url: '',
-}
+  callback_url: ''
+};
 
 var API = {
   SHIP           : 'v1/orders/ship',
   CANCEL         : 'v1/orders/',
   TRACK          : 'v1/orders/',
-  SERVICEABILITY : 'v1/orders/serviceability/',
-}
+  SERVICEABILITY : 'v1/orders/serviceability/'
+};
 
 module.exports = {
   'env'             : 'production',
   'oauth_json_path' : './RoadRunnrOAuth.json',
   'config'          : {
     'CLIENT_ID'     : 'YOUR-PRODUCTION-CLIENT-ID',
-    'CLIENT_SECRET' : 'YOUR-PRODUCTION-CLIENT-SECRET',
+    'CLIENT_SECRET' : 'YOUR-PRODUCTION-CLIENT-SECRET'
   },
 
-  setRoadrunnrOAuthPath : function(path) {
+  setOAuthPath : function(path) {
     this.oauth_json_path = path;
   },
 
@@ -121,12 +121,12 @@ module.exports = {
       request.post({
         headers : {
           'cache-control' : 'no-cache',
-          'content-type'  : 'Application/JSOn',
-          'authorization' : 'Token ' + token,
+          'content-type'  : 'Application/JSON',
+          'authorization' : 'Token ' + token
         },
         url     : HOSTS[env] + API.SHIP,
         body    : orderRequest,
-        json    : true,
+        json    : true
       }, function(error, response, body){
         if (error) {
           console.error("Request error: " + error);
@@ -144,11 +144,11 @@ module.exports = {
       request.get({
         headers : {
           'cache-control' : 'no-cache',
-          'content-type'  : 'Application/JSOn',
-          'authorization' : 'Token ' + token,
+          'content-type'  : 'Application/JSON',
+          'authorization' : 'Token ' + token
         },
         url     : HOSTS[env] + API.TRACK + '/' + id + '/track/',
-        json    : true,
+        json    : true
       }, function(error, response, body){
         if (error) {
           console.error("Request error: " + error);
@@ -166,12 +166,12 @@ module.exports = {
       request.post({
         headers : {
           'cache-control' : 'no-cache',
-          'content-type'  : 'Application/JSOn',
-          'authorization' : 'Token ' + token,
+          'content-type'  : 'Application/JSON',
+          'authorization' : 'Token ' + token
         },
         url     : HOSTS[env] + API.SERVICEABILITY,
         body    : orderRequest,
-        json    : true,
+        json    : true
       }, function(error, response, body){
         if (error) {
           console.error("Request error: " + error);
@@ -189,11 +189,11 @@ module.exports = {
       request.get({
         headers : {
           'cache-control' : 'no-cache',
-          'content-type'  : 'Application/JSOn',
-          'authorization' : 'Token ' + token,
+          'content-type'  : 'Application/JSON',
+          'authorization' : 'Token ' + token
         },
         url     : HOSTS[env] + API.TRACK + '/' + id + '/cancel/',
-        json    : true,
+        json    : true
       }, function(error, response, body){
         if (error) {
           console.error("Request error: " + error);
@@ -225,8 +225,8 @@ module.exports = {
         });
       }
     });
-  },
-}
+  }
+};
 
 function getOAuthToken(path, config, env, callback) {
   readFile(path, function(err, obj) {
@@ -243,10 +243,10 @@ function getNewToken(path, config, env, callback) {
   request.get({
     headers : {
       'cache-control' : 'no-cache',
-      'content-type'  : 'Application/JSOn',
+      'content-type'  : 'Application/JSON'
     },
     url     : HOSTS[env] + getTokenEP,
-    json    : true,
+    json    : true
   }, function(error, response, body) {
     if (error == null) {
       if (body.error) {
@@ -280,51 +280,67 @@ function getLatLngForAddress(addressString, callback) {
       } else {
         var geo = {
           lat: data.results[0].geometry.location.lat,
-          lng: data.results[0].geometry.location.lng,
-        }
+          lng: data.results[0].geometry.location.lng
+        };
         callback(null, geo);
       }
     }
   });
 }
 
-function readFile (file, options, callback) {
+/**
+ * Helper method to read file in JSON format
+ *
+ * @param path     path/to/file/containing/json/object
+ * @param options  Options passed onto fs.readFile method to get the file
+ * @param callback
+ */
+function readFile (path, options, callback) {
   if (callback == null) {
-    callback = options
+    callback = options;
     options = {}
   }
 
-  fs.readFile(file, options, function (err, data) {
-    if (err) return callback(err)
+  fs.readFile(path, options, function (err, data) {
+    if (err) return callback(err);
 
-    var obj
+    var obj;
     try {
       obj = JSON.parse(data, options ? options.reviver : null)
     } catch (err2) {
-      err2.message = file + ': ' + err2.message
+      err2.message = path + ': ' + err2.message;
       return callback(err2)
     }
     callback(null, obj)
   })
 }
 
-function writeFile (file, obj, options, callback) {
+function writeFile (path, obj, options, callback) {
+  /**
+   * Helper method to store a JSON type object to file
+   *
+   * @param path     The path where the file will be stored
+   * @param obj      The JavaScript object to be stored
+   * @param options  Options passed to the fs.writeFile function call to store the file
+   * @param callback
+   * @returns {*}
+   */
   if (callback == null) {
-    callback = options
+    callback = options;
     options = {}
   }
 
   var spaces = typeof options === 'object' && options !== null
     ? 'spaces' in options
     ? options.spaces : this.spaces
-    : this.spaces
+    : this.spaces;
 
-  var str = ''
+  var str = '';
   try {
     str = JSON.stringify(obj, options ? options.replacer : null, spaces) + '\n'
   } catch (err) {
     if (callback) return callback(err, null)
   }
 
-  fs.writeFile(file, str, options, callback)
+  fs.writeFile(path, str, options, callback)
 }
