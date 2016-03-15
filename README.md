@@ -1,5 +1,5 @@
 # RoadRunnr NodeJs Wrapper
-A javascript wrapper for RoadRunnr delivery service. In-built OAuth. You don't need to worry about getting and maintaining an access token. Just set your keys and you are good to go!
+A node wrapper library for RoadRunnr delivery service. In-built OAuth. You don't need to worry about getting and maintaining an access token. Just set your keys and you are good to go!
 
 ```
 npm install roadrunnr

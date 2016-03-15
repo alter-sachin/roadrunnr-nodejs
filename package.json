@@ -1,7 +1,7 @@
 {
   "name": "roadrunnr",
-  "version": "0.0.3",
-  "description": "A NodeJs wrapper for Roadrunnr logistic serrvices",
+  "version": "0.0.4",
+  "description": "A Node wrapper for Roadrunnr logistic serrvices",
   "main": "roadrunnr.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
