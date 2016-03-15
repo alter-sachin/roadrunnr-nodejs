@@ -100,8 +100,8 @@ runnr.checkServiceability(orderRequest, function(error, response) {
 ```
 
 #### <a name="assign_lat_long"></a>(OPTIONAL) Auto assign lat & long
-Please run ```npm install geocoder``` before using the following function. You can skip the ```locality``` and ```sub_locality``` fields using this. 
-IMPORTANT NOTE : This function geocodes the address in ```orderRquest.pickup.user.full_address.address``` and ```orderRequest.drop.user.full_address.address```. Make sure this the complete address which includes the city name and the pin code.
+Please run `npm install geocoder` before using the following function. You can skip the `locality` and `sub_locality` fields using this. 
+IMPORTANT NOTE : This function geocodes the address in `orderRquest.pickup.user.full_address.address` and `orderRequest.drop.user.full_address.address`. Make sure this the complete address which includes the city name and the pin code.
 ```javascript
 orderRequest.pickup.user.full_address.locality.name     = 'BYPASS_LOCALITY';
 orderRequest.pickup.user.full_address.sub_locality.name = ''; // Can be left blank
@@ -137,7 +137,7 @@ runnr.setOAuthPath('./path/to/OAuth/file.json');
 #### <a name="raw_parser"></a>(OPTIONAL) RawParser middleware for Express
 Roadrunnr callbacks are of type `application/octet-stream`, and rawBody has been dropped from the request object in newer versions of Express. Here is a simple rawbody parser for roadrunnr callbacks
 ```javascript
-app.post('/roadRunnr/callback', RR.rawParser, function(req,res) {
+app.post('/roadRunnr/callback', runnr.rawParser, function(req,res) {
   console.log(req.rawBody);
   res.send(req.rawBody);
 });
