@@ -1,5 +1,6 @@
 var request = require('request');
 var fs      = require('fs');
+var rp      = require('./rawParser.js');
 
 var HOSTS = {
   production : 'http://roadrunnr.in/',
@@ -17,10 +18,10 @@ var OrderRequest = {
       full_address: {
         address: '',
         locality: {
-         name: ''
+          name: ''
         },
         sub_locality: {
-         name: ''
+          name: ''
         },
         city: {
           name: ''
@@ -42,10 +43,10 @@ var OrderRequest = {
       full_address: {
         address: '',
         locality: {
-         name: ''
+          name: ''
         },
         sub_locality: {
-         name: ''
+          name: ''
         },
         city: {
           name: ''
@@ -225,7 +226,9 @@ module.exports = {
         });
       }
     });
-  }
+  },
+
+  rawParser : rp.rawParser
 };
 
 function getOAuthToken(path, config, env, callback) {
@@ -315,16 +318,15 @@ function readFile (path, options, callback) {
   })
 }
 
+/**
+ * Helper method to store a JSON type object to file
+ *
+ * @param path     The path where the file will be stored
+ * @param obj      The JavaScript object to be stored
+ * @param options  Options passed to the fs.writeFile function call to store the file
+ * @param callback
+ */
 function writeFile (path, obj, options, callback) {
-  /**
-   * Helper method to store a JSON type object to file
-   *
-   * @param path     The path where the file will be stored
-   * @param obj      The JavaScript object to be stored
-   * @param options  Options passed to the fs.writeFile function call to store the file
-   * @param callback
-   * @returns {*}
-   */
   if (callback == null) {
     callback = options;
     options = {}

@@ -16,8 +16,12 @@ runnr.setKeys(CLIENT_ID, CLIENT_SECRET);
 * [Track shipment](#track_shipment)
 * [Cancel shipment](#cancel_shipment)
 * [Check serviceability](#check_serviceability)
+
+### Bonus
 * [Auto assign lat long](#assign_lat_long)
 * [Use test environment](#set_test_environment)
+* [Set OAuth filepath](#set_oath_path)
+* [Raw Parser middleware for Express](#raw_parser)
 
 ### <a name="create_shipment"></a>Create shipment
 ```javascript
@@ -60,6 +64,8 @@ orderRequest.order_details.order_items[0].price     = 0;
 orderRequest.order_details.order_items[0].item.name = '';
 orderRequest.order_details.created_at               = "YYYY-MM-DD hh: MM";
 
+orderRequest.callback_url = 'your.domain/url'; // OPTIONAL
+
 runnr.createShipment(orderRequest, function(error, response) {
   console.log(response);
 });
@@ -93,10 +99,16 @@ runnr.checkServiceability(orderRequest, function(error, response) {
 });
 ```
 
-### <a name="assign_lat_long"></a>Optional, auto assign lat & long
+#### <a name="assign_lat_long"></a>(OPTIONAL) Auto assign lat & long
 Please run ```npm install geocoder``` before using the following function. You can skip the ```locality``` and ```sub_locality``` fields using this. 
 IMPORTANT NOTE : This function geocodes the address in ```orderRquest.pickup.user.full_address.address``` and ```orderRequest.drop.user.full_address.address```. Make sure this the complete address which includes the city name and the pin code.
 ```javascript
+orderRequest.pickup.user.full_address.locality.name     = 'BYPASS_LOCALITY';
+orderRequest.pickup.user.full_address.sub_locality.name = ''; // Can be left blank
+
+orderRequest.drop.user.full_address.locality.name     = 'BYPASS_LOCALITY';
+orderRequest.drop.user.full_address.sub_locality.name = '';  // Can be left blank
+
 runnr.assignLatLong(orderRequest, function(error, newOrderRequest) {
   if (error) {
     // There was some error geocoding one of the addresses
@@ -110,16 +122,25 @@ runnr.assignLatLong(orderRequest, function(error, newOrderRequest) {
 });
 ```
 
-#### <a name="set_test_environment"></a>Use test environment
+#### <a name="set_test_environment"></a>(OPTIONAL) Use test environment
 To use Roadrunnr's test portal, just change the environment. This module uses the production server by default.
 ```javascript
 runnr.setEnvironment('test');
 ```
 
-#### (OPTIONAL) Change OAuth token filepath
+#### <a name="set_oath_path"></a>(OPTIONAL) Change OAuth token filepath
 To use Roadrunnr's test portal, just change the environment. This module uses the production server by default.
 ```javascript
 runnr.setOAuthPath('./path/to/OAuth/file.json');
+```
+
+#### <a name="raw_parser"></a>(OPTIONAL) RawParser middleware for Express
+Roadrunnr callbacks are of type `application/octet-stream`, and rawBody has been dropped from the request object in newer versions of Express. Here is a simple rawbody parser for roadrunnr callbacks
+```javascript
+app.post('/roadRunnr/callback', RR.rawParser, function(req,res) {
+  console.log(req.rawBody);
+  res.send(req.rawBody);
+});
 ```
 
 ---
