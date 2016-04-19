@@ -96,12 +96,26 @@ module.exports = {
   },
 
   setOAuthPath : function(path) {
+    try {
+      fs.unlinkSync(this.oauth_json_path);
+    } catch (e) {
+      // console.log("No previous Roadrunnr OAuth file found");
+      // console.log(e);
+    }
+
     this.oauth_json_path = path;
   },
 
   setKeys : function(clientId, clientSecret) {
     this.config.CLIENT_ID     = clientId;
     this.config.CLIENT_SECRET = clientSecret;
+
+    try {
+      fs.unlinkSync(this.oauth_json_path);
+    } catch (e) {
+      // console.log("No previous Roadrunnr OAuth file found");
+      // console.log(e);
+    }
   },
 
   setEnvironment : function(env) {
@@ -133,7 +147,7 @@ module.exports = {
           console.error("Request error: " + error);
           callback(error, null);
         } else {
-          checkRRerrors(body, callback);
+          checkRRErrors(body, callback);
         }
       });
     });
@@ -155,7 +169,7 @@ module.exports = {
           console.error("Request error: " + error);
           callback(error, null);
         } else {
-          checkRRerrors(body, callback);
+          checkRRErrors(body, callback);
         }
       });
     });
@@ -178,7 +192,7 @@ module.exports = {
           console.error("Request error: " + error);
           callback(error, null);
         } else {
-          checkRRerrors(body, callback);
+          checkRRErrors(body, callback);
         }
       });
     });
@@ -200,13 +214,14 @@ module.exports = {
           console.error("Request error: " + error);
           callback(error, null);
         } else {
-          checkRRerrors(body, callback);
+          checkRRErrors(body, callback);
         }
       });
     });
   },
 
   // Optional, requires 'geocoder' npm module
+  // Run 'npm install geocoder' to use this method:
   assignLatLong : function(orderRequest, callback) {
     getLatLngForAddress(orderRequest.pickup.user.full_address.address, function(error, pickupGeo) {
       if (error) {
@@ -291,23 +306,32 @@ function getLatLngForAddress(addressString, callback) {
   });
 }
 
-function checkRRerrors(body, callback) {
+function checkRRErrors(body, callback) {
   var error = null;
 
   if (body.errors != null) {
     error = body.errors;
-  } else if (body.status.code != 200) {
-    error = getErrorInfo(body.status.code);
+  } else if (body.status != null) {
+    if (body.status.code != null) {
+      error = getErrorInfo(body.status.code);
+    } else {
+      error = getErrorInfo(parseInt(body.status));
+    }
   }
 
   callback(error, body);
 }
 
+/**
+ * Helper method to get information on Roadrunnr error codes
+ * @param code Error code thrown by Roadrunnr APIs
+ * @returns {{code: number, info: string}} Contains the error code and a small description of the error
+ */
 function getErrorInfo(code) {
   var error = {
     code: 0,
-    info: '',
-  }
+    info: ''
+  };
 
   switch(code) {
     case 200:
@@ -346,7 +370,7 @@ function getErrorInfo(code) {
 
     case 706:
       error.code = code;
-      error.info = 'No drivers available currently in the area. Retry in sometime';
+      error.info = 'No drivers available currently in the area. Retry in sometime.';
       break;
 
     case 310:
@@ -361,7 +385,7 @@ function getErrorInfo(code) {
 
     default:
       error.code = code;
-      error.info = 'Unknown error from Roadrunnr. Contact tech support.';
+      error.info = 'Unknown error from Roadrunnr. Check response for more details or contact tech support.';
       break;
   }
 
@@ -375,7 +399,7 @@ function getErrorInfo(code) {
  * @param options  Options passed onto fs.readFile method to get the file
  * @param callback
  */
-function readFile (path, options, callback) {
+function readFile(path, options, callback) {
   if (callback == null) {
     callback = options;
     options = {}
@@ -403,7 +427,7 @@ function readFile (path, options, callback) {
  * @param options  Options passed to the fs.writeFile function call to store the file
  * @param callback
  */
-function writeFile (path, obj, options, callback) {
+function writeFile(path, obj, options, callback) {
   if (callback == null) {
     callback = options;
     options = {}
