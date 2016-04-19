@@ -4,7 +4,7 @@ var rp      = require('./rawParser.js');
 
 var HOSTS = {
   production : 'http://roadrunnr.in/',
-  test       : 'http://128.199.241.199/'
+  test       : 'http://apitest.roadrunnr.in/'
 };
 
 var OrderRequest = {
