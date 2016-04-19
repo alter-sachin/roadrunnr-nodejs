@@ -75,7 +75,9 @@ Roadrunnr allows you to skip the "locality" and "sub_locality" parameters if you
 ### <a name="track_shipment"></a>Track shipment
 ```javascript
 runnr.trackShipment(id, function(error, response) {
-  if (error == null) {
+  if (error) {
+    console.error(error);
+  } else {
     console.log(response);
   }
 });
@@ -84,7 +86,9 @@ runnr.trackShipment(id, function(error, response) {
 ### <a name="cancel_shipment"></a>Cancel shipment
 ```javascript
 runnr.cancelShipment(id, function(error, response) {
-  if (error == null) {
+  if (error) {
+    console.error(error);
+  } else {
     console.log(response);
   }
 });
@@ -93,7 +97,9 @@ runnr.cancelShipment(id, function(error, response) {
 ### <a name="check_serviceability"></a>Check serviceability
 ```javascript
 runnr.checkServiceability(orderRequest, function(error, response) {
-  if (error == null) {
+  if (error) {
+    console.error(error);
+  } else {
     console.log(response);
   }
 });
@@ -114,7 +120,9 @@ runnr.assignLatLong(orderRequest, function(error, newOrderRequest) {
     // There was some error geocoding one of the addresses
   } else {
     runnr.createShipment(newOrderRequest, function(error, response) {
-      if (error == null) {
+      if (error) {
+        console.error(error);
+      } else {
         console.log(response);
       }
     });
@@ -139,9 +147,12 @@ Roadrunnr callbacks are of type `application/octet-stream`, and rawBody has been
 ```javascript
 app.post('/roadRunnr/callback', runnr.rawParser, function(req,res) {
   console.log(req.rawBody);
-  res.send(req.rawBody);
+  res.send("OK");
 });
 ```
+
+### Changes in v0.0.5
+This wrapper now checks for errors thrown by the Roadrunnr API. Please check for errors in all API calls.
 
 ---
 ### Submit issues
