@@ -91,8 +91,8 @@ module.exports = {
   'env'             : 'production',
   'oauth_json_path' : './RoadRunnrOAuth.json',
   'config'          : {
-    'CLIENT_ID'     : 'YOUR-PRODUCTION-CLIENT-ID',
-    'CLIENT_SECRET' : 'YOUR-PRODUCTION-CLIENT-SECRET'
+    'CLIENT_ID'     : 'YOUR-CLIENT-ID',
+    'CLIENT_SECRET' : 'YOUR-CLIENT-SECRET'
   },
 
   setOAuthPath : function(path) {
@@ -133,7 +133,7 @@ module.exports = {
           console.error("Request error: " + error);
           callback(error, null);
         } else {
-          callback(null, body);
+          checkRRerrors(body, callback);
         }
       });
     });
@@ -155,7 +155,7 @@ module.exports = {
           console.error("Request error: " + error);
           callback(error, null);
         } else {
-          callback(null, body);
+          checkRRerrors(body, callback);
         }
       });
     });
@@ -178,7 +178,7 @@ module.exports = {
           console.error("Request error: " + error);
           callback(error, null);
         } else {
-          callback(null, body);
+          checkRRerrors(body, callback);
         }
       });
     });
@@ -200,7 +200,7 @@ module.exports = {
           console.error("Request error: " + error);
           callback(error, null);
         } else {
-          callback(null, body);
+          checkRRerrors(body, callback);
         }
       });
     });
@@ -289,6 +289,83 @@ function getLatLngForAddress(addressString, callback) {
       }
     }
   });
+}
+
+function checkRRerrors(body, callback) {
+  var error = null;
+
+  if (body.errors != null) {
+    error = body.errors;
+  } else if (body.status.code != 200) {
+    error = getErrorInfo(body.status.code);
+  }
+
+  callback(error, body);
+}
+
+function getErrorInfo(code) {
+  var error = {
+    code: 0,
+    info: '',
+  }
+
+  switch(code) {
+    case 200:
+      error = null;
+      break;
+
+    case 312:
+      error.code = code;
+      error.info = 'This area is not serviceable. Distance > 8km.';
+      break;
+
+    case 810:
+      error.code = code;
+      error.info = 'Insufficient balance in account. Please recharge to create shipments.';
+      break;
+
+    case 422:
+      error.code = code;
+      error.info = 'Some error in OrderRequest. Check response body for details.';
+      break;
+
+    case 500:
+      error.code = code;
+      error.info = 'Roadrunnr server error.';
+      break;
+
+    case 400:
+      error.code = code;
+      error.info = 'Bad request. Contact Roadrunnr tech support.';
+      break;
+
+    case 404:
+      error.code = code;
+      error.info = 'No input file specified. Contact Roadrunnr tech support.';
+      break;
+
+    case 706:
+      error.code = code;
+      error.info = 'No drivers available currently in the area. Retry in sometime';
+      break;
+
+    case 310:
+      error.code = code;
+      error.info = 'The scheduled time is invalid. The scheduled delivery can be scheduled with a minimum of 2 hours from present time.';
+      break;
+
+    case 301:
+      error.code = code;
+      error.info = 'The order cannot be cancelled. Contact Roadrunnr tech support.';
+      break;
+
+    default:
+      error.code = code;
+      error.info = 'Unknown error from Roadrunnr. Contact tech support.';
+      break;
+  }
+
+  return error;
 }
 
 /**
