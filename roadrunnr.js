@@ -338,24 +338,19 @@ function getErrorInfo(code) {
       error = null;
       break;
 
+    case 301:
+      error.code = code;
+      error.info = 'The order cannot be cancelled. Contact Roadrunnr tech support.';
+      break;
+
+    case 310:
+      error.code = code;
+      error.info = 'The scheduled time is invalid. The scheduled delivery can be scheduled with a minimum of 2 hours from present time.';
+      break;
+
     case 312:
       error.code = code;
       error.info = 'This area is not serviceable. Distance > 8km.';
-      break;
-
-    case 810:
-      error.code = code;
-      error.info = 'Insufficient balance in account. Please recharge to create shipments.';
-      break;
-
-    case 422:
-      error.code = code;
-      error.info = 'Some error in OrderRequest. Check response body for details.';
-      break;
-
-    case 500:
-      error.code = code;
-      error.info = 'Roadrunnr server error.';
       break;
 
     case 400:
@@ -368,19 +363,24 @@ function getErrorInfo(code) {
       error.info = 'No input file specified. Contact Roadrunnr tech support.';
       break;
 
+    case 422:
+      error.code = code;
+      error.info = 'Some error in OrderRequest. Check response body for details.';
+      break;
+
+    case 500:
+      error.code = code;
+      error.info = 'Roadrunnr server error.';
+      break;
+
     case 706:
       error.code = code;
       error.info = 'No drivers available currently in the area. Retry in sometime.';
       break;
 
-    case 310:
+    case 810:
       error.code = code;
-      error.info = 'The scheduled time is invalid. The scheduled delivery can be scheduled with a minimum of 2 hours from present time.';
-      break;
-
-    case 301:
-      error.code = code;
-      error.info = 'The order cannot be cancelled. Contact Roadrunnr tech support.';
+      error.info = 'Insufficient balance in account. Please recharge to create shipments.';
       break;
 
     default:
