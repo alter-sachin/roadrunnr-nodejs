@@ -12,7 +12,7 @@ runnr.setKeys(CLIENT_ID, CLIENT_SECRET);
 ```
 
 ### APIs available
-* [Create shipment](#create_shipment)
+* [Create shipment](#create_shipment) - with an option to [auto-retry](#auto_retry) in v0.0.6!
 * [Track shipment](#track_shipment)
 * [Cancel shipment](#cancel_shipment)
 * [Check serviceability](#check_serviceability)
@@ -22,6 +22,11 @@ runnr.setKeys(CLIENT_ID, CLIENT_SECRET);
 * [Use test environment](#set_test_environment)
 * [Set OAuth filepath](#set_oath_path)
 * [Raw Parser middleware for Express](#raw_parser)
+
+### <a name="create_shipment"></a>Auto Retry
+Using this option allows the module to retry assigning a runnr for an OrderRequest which led to a 706 error from Runnr (no runnrs available at the moment).
+```javascript
+
 
 ### <a name="create_shipment"></a>Create shipment
 ```javascript

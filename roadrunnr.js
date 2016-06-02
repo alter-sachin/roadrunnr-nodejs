@@ -1,6 +1,8 @@
-var request = require('request');
-var fs      = require('fs');
-var rp      = require('./rawParser.js');
+var request       = require('request');
+var fs            = require('fs');
+var rp            = require('./rawParser.js');
+var EventEmitter  = require('events').EventEmitter;
+var util          = require('util');
 
 var HOSTS = {
   production : 'http://roadrunnr.in/',
@@ -87,6 +89,25 @@ var API = {
   SERVICEABILITY : 'v1/orders/serviceability/'
 };
 
+var CONSTANTS = {
+  RETRY_ERROR   : 'retryError',
+  RETRY_SUCCESS : 'retrySuccess'
+};
+
+function RREvents() {
+
+}
+
+util.inherits(RREvents, EventEmitter);
+
+RREvents.prototype.retryError = function(orderId) {
+  this.emit(CONSTANTS.RETRY_ERROR, orderId);
+};
+
+RREvents.prototype.retrySuccess = function(orderId) {
+  this.emit(CONSTANTS.RETRY_SUCCESS, orderId);
+};
+
 module.exports = {
   'env'             : 'production',
   'oauth_json_path' : './RoadRunnrOAuth.json',
@@ -130,7 +151,13 @@ module.exports = {
     return OrderRequest;
   },
 
-  createShipment : function(orderRequest, callback) {
+  createShipment : function(orderRequest, options, callback) {
+    var self = this;
+    if (callback == null) {
+      callback = options;
+      options  = null;
+    }
+
     var env = this.env;
     getOAuthToken(this.oauth_json_path, this.config, env, function(error, token) {
       request.post({
@@ -147,7 +174,14 @@ module.exports = {
           console.error("Request error: " + error);
           callback(error, null);
         } else {
-          checkRRErrors(body, callback);
+          if (options != null && options.retry === true) {
+            if (body.status.code != null &&  body.status.code === 706) {
+              retryShipment(self, orderRequest, options);
+            }
+            checkRRErrors(body, callback);
+          } else {
+            checkRRErrors(body, callback);
+          }
         }
       });
     });
@@ -231,11 +265,15 @@ module.exports = {
           if (error) {
             callback(error, null);
           } else {
-            orderRequest.pickup.user.full_address.geo.latitude  = pickupGeo.lat;
-            orderRequest.pickup.user.full_address.geo.longitude = pickupGeo.lng;
+            orderRequest.pickup.user.full_address.locality.name     = 'BYPASS_LOCALITY';
+            orderRequest.pickup.user.full_address.sub_locality.name = '';
+            orderRequest.pickup.user.full_address.geo.latitude      = pickupGeo.lat;
+            orderRequest.pickup.user.full_address.geo.longitude     = pickupGeo.lng;
 
-            orderRequest.drop.user.full_address.geo.latitude  = dropGeo.lat;
-            orderRequest.drop.user.full_address.geo.longitude = dropGeo.lng;
+            orderRequest.drop.user.full_address.locality.name     = 'BYPASS_LOCALITY';
+            orderRequest.drop.user.full_address.sub_locality.name = '';
+            orderRequest.drop.user.full_address.geo.latitude      = dropGeo.lat;
+            orderRequest.drop.user.full_address.geo.longitude     = dropGeo.lng;
             callback(null, orderRequest);
           }
         });
@@ -243,7 +281,16 @@ module.exports = {
     });
   },
 
-  rawParser : rp.rawParser
+  events : new RREvents(),
+
+  testEvent : function() {
+    this.events.retryError("order44");
+  },
+
+  rawParser : rp.rawParser,
+
+  RETRY_ERROR   : CONSTANTS.RETRY_ERROR,
+  RETRY_SUCCESS : CONSTANTS.RETRY_SUCCESS
 };
 
 function getOAuthToken(path, config, env, callback) {
@@ -283,6 +330,25 @@ function getNewToken(path, config, env, callback) {
       callback(error, error);
     }
   });
+}
+
+/**
+ *
+ * @param runnrInstance Module instance with keys and env set
+ * @param OrderRequest  OrderRequest which needs to be retried
+ * @param options       Options contains if retry is required and time for retry
+ */
+function retryShipment(runnrInstance, OrderRequest, options) {
+  var retryTime = options.retryTime * 1000; // retryTime in seconds
+  setTimeout(function() {
+    runnrInstance.createShipment(OrderRequest, options, function(error, response) {
+      if (error) {
+        runnrInstance.events.retryError(OrderRequest.order_details.order_id);
+      } else {
+        runnrInstance.events.retrySuccess(OrderRequest.order_details.order_id);
+      }
+    });
+  }, retryTime);
 }
 
 function getLatLngForAddress(addressString, callback) {
