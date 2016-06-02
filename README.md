@@ -92,7 +92,7 @@ var options = {
   retryTime : 5 // in seconds
 };
 
-runnr.createShipment(newOrderRequest, options, function(error, response) {
+runnr.createShipment(orderRequest, options, function(error, response) {
   if (error == null) {
     console.log(response);
   } else {
