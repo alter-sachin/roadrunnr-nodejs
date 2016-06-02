@@ -85,7 +85,7 @@ runnr.events.on(RR.RETRY_SUCCESS, function(orderId) {
 });
 ```
 
-Call the `createShipment` API with retry options
+Call the `createShipment` API with retry options.
 ```javascript
 var options = {
   retry     : true,
