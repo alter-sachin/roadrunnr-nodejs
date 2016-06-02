@@ -25,7 +25,32 @@ runnr.setKeys(CLIENT_ID, CLIENT_SECRET);
 
 ### <a name="create_shipment"></a>Auto Retry
 Using this option allows the module to retry assigning a runnr for an OrderRequest which led to a 706 error from Runnr (no runnrs available at the moment).
+Place the following code right below the part where you set your keys.
+
 ```javascript
+runnr.events.on(RR.RETRY_ERROR, function(orderId) {
+  console.log("Retry failed for orderId: " + orderId); // This is the order_id provided in OrderRequest.order_details.order_id
+});
+runnr.events.on(RR.RETRY_SUCCESS, function(orderId) {
+  console.log("Retry success for orderId: " + orderId); // This is the order_id provided in OrderRequest.order_details.order_id
+});
+```
+
+
+```javascript
+var opts = {
+  retry     : true,
+  retryTime : 5 // in seconds
+};
+
+runnr.createShipment(newOrderRequest, opts, function(error, response) {
+  if (error == null) {
+    console.log(response);
+  } else {
+    console.error(response);
+  }
+});
+```
 
 
 ### <a name="create_shipment"></a>Create shipment
@@ -155,6 +180,9 @@ app.post('/roadRunnr/callback', runnr.rawParser, function(req,res) {
   res.send("OK");
 });
 ```
+
+### Changes in v0.0.6
+This wrapper now has an option to [auto-retry](#auto_retry) in cases of 706 error from runnr.
 
 ### Changes in v0.0.5
 This wrapper now checks for errors thrown by the Roadrunnr API. Please check for errors in all API calls.
