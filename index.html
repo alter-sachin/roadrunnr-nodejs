@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Roadrunnr NodeJs by Sidhant Panda</title>
+    <title>Roadrunnr NodeJs by sidhantpanda</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -37,7 +37,8 @@
 <a id="apis-available" class="anchor" href="#apis-available" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>APIs available</h3>
 
 <ul>
-<li><a href="#create_shipment">Create shipment</a></li>
+<li>
+<a href="#create_shipment">Create shipment</a> - with an option to <a href="#auto_retry">auto-retry</a> in v0.0.6!</li>
 <li><a href="#track_shipment">Track shipment</a></li>
 <li><a href="#cancel_shipment">Cancel shipment</a></li>
 <li><a href="#check_serviceability">Check serviceability</a></li>
@@ -104,10 +105,40 @@
 <p>Roadrunnr allows you to skip the "locality" and "sub_locality" parameters if you provide the accurate lat &amp; long for the addresses. I've added a geocoder which converts the address almost accurate lat long. <a href="#assign_lat_long">Instrutions here</a>.</p>
 
 <h3>
+<a id="auto-retry" class="anchor" href="#auto-retry" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a name="auto_retry"></a>Auto Retry</h3>
+
+<p>Using this option allows the module to retry assigning a runnr for an OrderRequest which led to a 706 error from Runnr (no runnrs available at the moment).
+Place the following code right below the part where you set your keys.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">runnr</span>.<span class="pl-smi">events</span>.<span class="pl-en">on</span>(<span class="pl-c1">RR</span>.<span class="pl-c1">RETRY_ERROR</span>, <span class="pl-k">function</span>(<span class="pl-smi">orderId</span>) {
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Retry failed for orderId: <span class="pl-pds">"</span></span> <span class="pl-k">+</span> orderId); <span class="pl-c">// This is the order_id provided in OrderRequest.order_details.order_id</span>
+});
+<span class="pl-smi">runnr</span>.<span class="pl-smi">events</span>.<span class="pl-en">on</span>(<span class="pl-c1">RR</span>.<span class="pl-c1">RETRY_SUCCESS</span>, <span class="pl-k">function</span>(<span class="pl-smi">orderId</span>) {
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Retry success for orderId: <span class="pl-pds">"</span></span> <span class="pl-k">+</span> orderId); <span class="pl-c">// This is the order_id provided in OrderRequest.order_details.order_id</span>
+});</pre></div>
+
+<p>Call the <code>createShipment</code> API with retry options.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> options <span class="pl-k">=</span> {
+  retry     <span class="pl-k">:</span> <span class="pl-c1">true</span>,
+  retryTime <span class="pl-k">:</span> <span class="pl-c1">5</span> <span class="pl-c">// in seconds</span>
+};
+
+<span class="pl-smi">runnr</span>.<span class="pl-en">createShipment</span>(orderRequest, options, <span class="pl-k">function</span>(<span class="pl-smi">error</span>, <span class="pl-smi">response</span>) {
+  <span class="pl-k">if</span> (error <span class="pl-k">==</span> <span class="pl-c1">null</span>) {
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(response);
+  } <span class="pl-k">else</span> {
+    <span class="pl-en">console</span>.<span class="pl-c1">error</span>(response);
+  }
+});</pre></div>
+
+<h3>
 <a id="track-shipment" class="anchor" href="#track-shipment" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a name="track_shipment"></a>Track shipment</h3>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-smi">runnr</span>.<span class="pl-en">trackShipment</span>(id, <span class="pl-k">function</span>(<span class="pl-smi">error</span>, <span class="pl-smi">response</span>) {
-  <span class="pl-k">if</span> (error <span class="pl-k">==</span> <span class="pl-c1">null</span>) {
+  <span class="pl-k">if</span> (error) {
+    <span class="pl-en">console</span>.<span class="pl-c1">error</span>(error);
+  } <span class="pl-k">else</span> {
     <span class="pl-en">console</span>.<span class="pl-c1">log</span>(response);
   }
 });</pre></div>
@@ -116,7 +147,9 @@
 <a id="cancel-shipment" class="anchor" href="#cancel-shipment" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a name="cancel_shipment"></a>Cancel shipment</h3>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-smi">runnr</span>.<span class="pl-en">cancelShipment</span>(id, <span class="pl-k">function</span>(<span class="pl-smi">error</span>, <span class="pl-smi">response</span>) {
-  <span class="pl-k">if</span> (error <span class="pl-k">==</span> <span class="pl-c1">null</span>) {
+  <span class="pl-k">if</span> (error) {
+    <span class="pl-en">console</span>.<span class="pl-c1">error</span>(error);
+  } <span class="pl-k">else</span> {
     <span class="pl-en">console</span>.<span class="pl-c1">log</span>(response);
   }
 });</pre></div>
@@ -125,7 +158,9 @@
 <a id="check-serviceability" class="anchor" href="#check-serviceability" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a name="check_serviceability"></a>Check serviceability</h3>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-smi">runnr</span>.<span class="pl-en">checkServiceability</span>(orderRequest, <span class="pl-k">function</span>(<span class="pl-smi">error</span>, <span class="pl-smi">response</span>) {
-  <span class="pl-k">if</span> (error <span class="pl-k">==</span> <span class="pl-c1">null</span>) {
+  <span class="pl-k">if</span> (error) {
+    <span class="pl-en">console</span>.<span class="pl-c1">error</span>(error);
+  } <span class="pl-k">else</span> {
     <span class="pl-en">console</span>.<span class="pl-c1">log</span>(response);
   }
 });</pre></div>
@@ -147,7 +182,9 @@ IMPORTANT NOTE : This function geocodes the address in <code>orderRquest.pickup.
     <span class="pl-c">// There was some error geocoding one of the addresses</span>
   } <span class="pl-k">else</span> {
     <span class="pl-smi">runnr</span>.<span class="pl-en">createShipment</span>(newOrderRequest, <span class="pl-k">function</span>(<span class="pl-smi">error</span>, <span class="pl-smi">response</span>) {
-      <span class="pl-k">if</span> (error <span class="pl-k">==</span> <span class="pl-c1">null</span>) {
+      <span class="pl-k">if</span> (error) {
+        <span class="pl-en">console</span>.<span class="pl-c1">error</span>(error);
+      } <span class="pl-k">else</span> {
         <span class="pl-en">console</span>.<span class="pl-c1">log</span>(response);
       }
     });
@@ -175,8 +212,18 @@ IMPORTANT NOTE : This function geocodes the address in <code>orderRquest.pickup.
 
 <div class="highlight highlight-source-js"><pre><span class="pl-smi">app</span>.<span class="pl-en">post</span>(<span class="pl-s"><span class="pl-pds">'</span>/roadRunnr/callback<span class="pl-pds">'</span></span>, <span class="pl-smi">runnr</span>.<span class="pl-smi">rawParser</span>, <span class="pl-k">function</span>(<span class="pl-smi">req</span>,<span class="pl-smi">res</span>) {
   <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-smi">req</span>.<span class="pl-smi">rawBody</span>);
-  <span class="pl-smi">res</span>.<span class="pl-c1">send</span>(<span class="pl-smi">req</span>.<span class="pl-smi">rawBody</span>);
+  <span class="pl-smi">res</span>.<span class="pl-c1">send</span>(<span class="pl-s"><span class="pl-pds">"</span>OK<span class="pl-pds">"</span></span>);
 });</pre></div>
+
+<h3>
+<a id="changes-in-v006" class="anchor" href="#changes-in-v006" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Changes in v0.0.6</h3>
+
+<p>This wrapper now has an option to <a href="#auto_retry">auto-retry</a> in cases of 706 error from runnr.</p>
+
+<h3>
+<a id="changes-in-v005" class="anchor" href="#changes-in-v005" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Changes in v0.0.5</h3>
+
+<p>This wrapper now checks for errors thrown by the Roadrunnr API. Please check for errors in all API calls.</p>
 
 <hr>
 
@@ -186,7 +233,9 @@ IMPORTANT NOTE : This function geocodes the address in <code>orderRquest.pickup.
 <p>You can raise an issue in this repo or mail me at <a href="mailto:sidhant@hashexclude.com">sidhant@hashexclude.com</a></p>
 
       <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/sidhantpanda/roadrunnr-nodejs">Roadrunnr NodeJs</a> is maintained by <a href="https://github.com/sidhantpanda">Sidhant Panda</a>.</span>
+        <span class="site-footer-owner"><a href="https://github.com/sidhantpanda/roadrunnr-nodejs">Roadrunnr NodeJs</a> is maintained by <a href="https://github.com/sidhantpanda">sidhantpanda</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
 
     </section>
