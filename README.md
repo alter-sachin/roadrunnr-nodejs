@@ -23,36 +23,6 @@ runnr.setKeys(CLIENT_ID, CLIENT_SECRET);
 * [Set OAuth filepath](#set_oath_path)
 * [Raw Parser middleware for Express](#raw_parser)
 
-### <a name="create_shipment"></a>Auto Retry
-Using this option allows the module to retry assigning a runnr for an OrderRequest which led to a 706 error from Runnr (no runnrs available at the moment).
-Place the following code right below the part where you set your keys.
-
-```javascript
-runnr.events.on(RR.RETRY_ERROR, function(orderId) {
-  console.log("Retry failed for orderId: " + orderId); // This is the order_id provided in OrderRequest.order_details.order_id
-});
-runnr.events.on(RR.RETRY_SUCCESS, function(orderId) {
-  console.log("Retry success for orderId: " + orderId); // This is the order_id provided in OrderRequest.order_details.order_id
-});
-```
-
-
-```javascript
-var opts = {
-  retry     : true,
-  retryTime : 5 // in seconds
-};
-
-runnr.createShipment(newOrderRequest, opts, function(error, response) {
-  if (error == null) {
-    console.log(response);
-  } else {
-    console.error(response);
-  }
-});
-```
-
-
 ### <a name="create_shipment"></a>Create shipment
 ```javascript
 var orderRequest = new runnr.OrderRequest();
@@ -101,6 +71,35 @@ runnr.createShipment(orderRequest, function(error, response) {
 });
 ```
 Roadrunnr allows you to skip the "locality" and "sub_locality" parameters if you provide the accurate lat & long for the addresses. I've added a geocoder which converts the address almost accurate lat long. [Instrutions here](#assign_lat_long).
+
+### <a name="auto_retry"></a>Auto Retry
+Using this option allows the module to retry assigning a runnr for an OrderRequest which led to a 706 error from Runnr (no runnrs available at the moment).
+Place the following code right below the part where you set your keys.
+
+```javascript
+runnr.events.on(RR.RETRY_ERROR, function(orderId) {
+  console.log("Retry failed for orderId: " + orderId); // This is the order_id provided in OrderRequest.order_details.order_id
+});
+runnr.events.on(RR.RETRY_SUCCESS, function(orderId) {
+  console.log("Retry success for orderId: " + orderId); // This is the order_id provided in OrderRequest.order_details.order_id
+});
+```
+
+Call the `createShipment` API with retry options
+```javascript
+var options = {
+  retry     : true,
+  retryTime : 5 // in seconds
+};
+
+runnr.createShipment(newOrderRequest, options, function(error, response) {
+  if (error == null) {
+    console.log(response);
+  } else {
+    console.error(response);
+  }
+});
+```
 
 ### <a name="track_shipment"></a>Track shipment
 ```javascript
