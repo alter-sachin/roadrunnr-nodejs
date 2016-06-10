@@ -16,6 +16,8 @@ runnr.setKeys(CLIENT_ID, CLIENT_SECRET);
 * [Track shipment](#track_shipment)
 * [Cancel shipment](#cancel_shipment)
 * [Check serviceability](#check_serviceability)
+* [Check account balance](#check_account_balance)
+* [Check order level charges](#check_order_level_charges)
 
 ### Bonus
 * [Auto assign lat long](#assign_lat_long)
@@ -134,6 +136,28 @@ runnr.checkServiceability(orderRequest, function(error, response) {
 });
 ```
 
+### <a name="check_account_balance"></a>Check serviceability
+```javascript
+runnr.checkAccountBalance(function (error, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log(response); // Balance at response.current_balance
+  }
+});
+```
+
+### <a name="check_order_level_charges"></a>Check serviceability
+```javascript
+runnr.getOrderLevelCharges("RUNNR_ORDER_ID", function (error, response) {
+ if (error) {
+   console.error(error);
+ } else {
+   console.log(response); // Charges at response.total_charge
+ }
+});
+```
+
 #### <a name="assign_lat_long"></a>(OPTIONAL) Auto assign lat & long
 Please run `npm install geocoder` before using the following function. You can skip the `locality` and `sub_locality` fields using this. 
 IMPORTANT NOTE : This function geocodes the address in `orderRquest.pickup.user.full_address.address` and `orderRequest.drop.user.full_address.address`. Make sure this the complete address which includes the city name and the pin code.
@@ -179,6 +203,12 @@ app.post('/roadRunnr/callback', runnr.rawParser, function(req,res) {
   res.send("OK");
 });
 ```
+
+### Changes in v0.0.7
+* Switched to Runnr HTTPS server for production requests
+* New Runnr OAuth flow
+* [Check account balance](#check_account_balance)
+* [Check order level charges](#check_order_level_charges)
 
 ### Changes in v0.0.6
 This wrapper now has an option to [auto-retry](#auto_retry) in cases of 706 error from runnr.
