@@ -1,5 +1,5 @@
-# RoadRunnr NodeJs Wrapper
-A node wrapper library for RoadRunnr delivery service. In-built OAuth. You don't need to worry about getting and maintaining an access token. Just set your keys and you are good to go!
+# Runnr NodeJs Wrapper
+A node wrapper library for Runnr hyper local delivery service. In-built OAuth. You don't need to worry about getting and maintaining an access token. Just set your keys and you are good to go!
 
 ```
 npm install roadrunnr
@@ -204,6 +204,8 @@ app.post('/roadRunnr/callback', runnr.rawParser, function(req,res) {
 });
 ```
 
+
+---
 ### Changes in v0.0.7
 * Switched to Runnr HTTPS server for production requests
 * New Runnr OAuth flow
