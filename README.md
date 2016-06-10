@@ -79,10 +79,10 @@ Using this option allows the module to retry assigning a runnr for an OrderReque
 Place the following code right below the part where you set your keys.
 
 ```javascript
-runnr.events.on(RR.RETRY_ERROR, function(orderId) {
+runnr.events.on(runnr.RETRY_ERROR, function(orderId) {
   console.log("Retry failed for orderId: " + orderId); // This is the order_id provided in OrderRequest.order_details.order_id
 });
-runnr.events.on(RR.RETRY_SUCCESS, function(orderId) {
+runnr.events.on(runnr.RETRY_SUCCESS, function(orderId) {
   console.log("Retry success for orderId: " + orderId); // This is the order_id provided in OrderRequest.order_details.order_id
 });
 ```
