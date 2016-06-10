@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Roadrunnr NodeJs by sidhantpanda</title>
+    <title>Runnr NodeJs by sidhantpanda</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -11,8 +11,8 @@
   </head>
   <body>
     <section class="page-header">
-      <h1 class="project-name">Roadrunnr NodeJs</h1>
-      <h2 class="project-tagline">A NodeJS wrapper for RoadRunnr delivery service</h2>
+      <h1 class="project-name">Runnr NodeJs</h1>
+      <h2 class="project-tagline">A NodeJS wrapper for Runnr hyper local delivery service</h2>
       <a href="https://github.com/sidhantpanda/roadrunnr-nodejs" class="btn">View on GitHub</a>
       <a href="https://github.com/sidhantpanda/roadrunnr-nodejs/zipball/master" class="btn">Download .zip</a>
       <a href="https://github.com/sidhantpanda/roadrunnr-nodejs/tarball/master" class="btn">Download .tar.gz</a>
@@ -20,9 +20,9 @@
 
     <section class="main-content">
       <h1>
-<a id="roadrunnr-nodejs-wrapper" class="anchor" href="#roadrunnr-nodejs-wrapper" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>RoadRunnr NodeJs Wrapper</h1>
+<a id="runnr-nodejs-wrapper" class="anchor" href="#runnr-nodejs-wrapper" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Runnr NodeJs Wrapper</h1>
 
-<p>A node wrapper library for RoadRunnr delivery service. In-built OAuth. You don't need to worry about getting and maintaining an access token. Just set your keys and you are good to go!</p>
+<p>A node wrapper library for Runnr hyper local delivery service. In-built OAuth. You don't need to worry about getting and maintaining an access token. Just set your keys and you are good to go!</p>
 
 <pre><code>npm install roadrunnr
 </code></pre>
@@ -38,10 +38,13 @@
 
 <ul>
 <li>
-<a href="#create_shipment">Create shipment</a> - with an option to <a href="#auto_retry">auto-retry</a> in v0.0.6!</li>
+<a href="#create_shipment">Create shipment</a> - with an option to <a href="#auto_retry">auto-retry</a>
+</li>
 <li><a href="#track_shipment">Track shipment</a></li>
 <li><a href="#cancel_shipment">Cancel shipment</a></li>
 <li><a href="#check_serviceability">Check serviceability</a></li>
+<li><a href="#check_account_balance">Check account balance</a></li>
+<li><a href="#check_order_level_charges">Check order level charges</a></li>
 </ul>
 
 <h3>
@@ -80,9 +83,9 @@
 <span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-c1">type</span>                             <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
 <span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">external_id</span>                      <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
 <span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">address</span>             <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
-<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">locality</span>.<span class="pl-c1">name</span>     <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>; <span class="pl-c">// Can be skipped, see below</span>
-<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">sub_locality</span>.<span class="pl-c1">name</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>; <span class="pl-c">// Can be skipped, see below</span>
-<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">city</span>.<span class="pl-c1">name</span>         <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">locality</span>.<span class="pl-c1">name</span>       <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>; <span class="pl-c">// Can be skipped, see below</span>
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">sub_locality</span>.<span class="pl-c1">name</span>   <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>; <span class="pl-c">// Can be skipped, see below</span>
+<span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">city</span>.<span class="pl-c1">name</span>           <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>;
 <span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">geo</span>.<span class="pl-smi">latitude</span>        <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>dlat<span class="pl-pds">"</span></span>; <span class="pl-c">// Optional, string format</span>
 <span class="pl-smi">orderRequest</span>.<span class="pl-smi">drop</span>.<span class="pl-smi">user</span>.<span class="pl-smi">full_address</span>.<span class="pl-smi">geo</span>.<span class="pl-smi">longitude</span>       <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>dlng<span class="pl-pds">"</span></span>; <span class="pl-c">// Optional, string format</span>
 
@@ -110,10 +113,10 @@
 <p>Using this option allows the module to retry assigning a runnr for an OrderRequest which led to a 706 error from Runnr (no runnrs available at the moment).
 Place the following code right below the part where you set your keys.</p>
 
-<div class="highlight highlight-source-js"><pre><span class="pl-smi">runnr</span>.<span class="pl-smi">events</span>.<span class="pl-en">on</span>(<span class="pl-c1">RR</span>.<span class="pl-c1">RETRY_ERROR</span>, <span class="pl-k">function</span>(<span class="pl-smi">orderId</span>) {
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">runnr</span>.<span class="pl-smi">events</span>.<span class="pl-en">on</span>(<span class="pl-smi">runnr</span>.<span class="pl-c1">RETRY_ERROR</span>, <span class="pl-k">function</span>(<span class="pl-smi">orderId</span>) {
   <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Retry failed for orderId: <span class="pl-pds">"</span></span> <span class="pl-k">+</span> orderId); <span class="pl-c">// This is the order_id provided in OrderRequest.order_details.order_id</span>
 });
-<span class="pl-smi">runnr</span>.<span class="pl-smi">events</span>.<span class="pl-en">on</span>(<span class="pl-c1">RR</span>.<span class="pl-c1">RETRY_SUCCESS</span>, <span class="pl-k">function</span>(<span class="pl-smi">orderId</span>) {
+<span class="pl-smi">runnr</span>.<span class="pl-smi">events</span>.<span class="pl-en">on</span>(<span class="pl-smi">runnr</span>.<span class="pl-c1">RETRY_SUCCESS</span>, <span class="pl-k">function</span>(<span class="pl-smi">orderId</span>) {
   <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Retry success for orderId: <span class="pl-pds">"</span></span> <span class="pl-k">+</span> orderId); <span class="pl-c">// This is the order_id provided in OrderRequest.order_details.order_id</span>
 });</pre></div>
 
@@ -125,10 +128,10 @@ Place the following code right below the part where you set your keys.</p>
 };
 
 <span class="pl-smi">runnr</span>.<span class="pl-en">createShipment</span>(orderRequest, options, <span class="pl-k">function</span>(<span class="pl-smi">error</span>, <span class="pl-smi">response</span>) {
-  <span class="pl-k">if</span> (error <span class="pl-k">==</span> <span class="pl-c1">null</span>) {
-    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(response);
+  <span class="pl-k">if</span> (error) {
+    <span class="pl-en">console</span>.<span class="pl-c1">error</span>(error);
   } <span class="pl-k">else</span> {
-    <span class="pl-en">console</span>.<span class="pl-c1">error</span>(response);
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(response);
   }
 });</pre></div>
 
@@ -163,6 +166,28 @@ Place the following code right below the part where you set your keys.</p>
   } <span class="pl-k">else</span> {
     <span class="pl-en">console</span>.<span class="pl-c1">log</span>(response);
   }
+});</pre></div>
+
+<h3>
+<a id="check-serviceability-1" class="anchor" href="#check-serviceability-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a name="check_account_balance"></a>Check serviceability</h3>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">runnr</span>.<span class="pl-en">checkAccountBalance</span>(<span class="pl-k">function</span> (<span class="pl-smi">error</span>, <span class="pl-smi">response</span>) {
+  <span class="pl-k">if</span> (error) {
+    <span class="pl-en">console</span>.<span class="pl-c1">error</span>(error);
+  } <span class="pl-k">else</span> {
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(response); <span class="pl-c">// Balance at response.current_balance</span>
+  }
+});</pre></div>
+
+<h3>
+<a id="check-serviceability-2" class="anchor" href="#check-serviceability-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a name="check_order_level_charges"></a>Check serviceability</h3>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">runnr</span>.<span class="pl-en">getOrderLevelCharges</span>(<span class="pl-s"><span class="pl-pds">"</span>RUNNR_ORDER_ID<span class="pl-pds">"</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">error</span>, <span class="pl-smi">response</span>) {
+ <span class="pl-k">if</span> (error) {
+   <span class="pl-en">console</span>.<span class="pl-c1">error</span>(error);
+ } <span class="pl-k">else</span> {
+   <span class="pl-en">console</span>.<span class="pl-c1">log</span>(response); <span class="pl-c">// Charges at response.total_charge</span>
+ }
 });</pre></div>
 
 <h4>
@@ -215,6 +240,18 @@ IMPORTANT NOTE : This function geocodes the address in <code>orderRquest.pickup.
   <span class="pl-smi">res</span>.<span class="pl-c1">send</span>(<span class="pl-s"><span class="pl-pds">"</span>OK<span class="pl-pds">"</span></span>);
 });</pre></div>
 
+<hr>
+
+<h3>
+<a id="changes-in-v007" class="anchor" href="#changes-in-v007" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Changes in v0.0.7</h3>
+
+<ul>
+<li>Switched to Runnr HTTPS server for production requests</li>
+<li>New Runnr OAuth flow</li>
+<li><a href="#check_account_balance">Check account balance</a></li>
+<li><a href="#check_order_level_charges">Check order level charges</a></li>
+</ul>
+
 <h3>
 <a id="changes-in-v006" class="anchor" href="#changes-in-v006" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Changes in v0.0.6</h3>
 
@@ -233,7 +270,9 @@ IMPORTANT NOTE : This function geocodes the address in <code>orderRquest.pickup.
 <p>You can raise an issue in this repo or mail me at <a href="mailto:sidhant@hashexclude.com">sidhant@hashexclude.com</a></p>
 
       <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/sidhantpanda/roadrunnr-nodejs">Roadrunnr NodeJs</a> is maintained by <a href="https://github.com/sidhantpanda">sidhantpanda</a>.</span>
+        <span class="site-footer-owner"><a href="https://github.com/sidhantpanda/roadrunnr-nodejs">Runnr NodeJs</a> is maintained by <a href="https://github.com/sidhantpanda">sidhantpanda</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
 
     </section>
