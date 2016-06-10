@@ -12,7 +12,7 @@ runnr.setKeys(CLIENT_ID, CLIENT_SECRET);
 ```
 
 ### APIs available
-* [Create shipment](#create_shipment) - with an option to [auto-retry](#auto_retry) in v0.0.6!
+* [Create shipment](#create_shipment) - with an option to [auto-retry](#auto_retry)
 * [Track shipment](#track_shipment)
 * [Cancel shipment](#cancel_shipment)
 * [Check serviceability](#check_serviceability)
@@ -50,9 +50,9 @@ orderRequest.drop.user.email                            = '';
 orderRequest.drop.user.type                             = '';
 orderRequest.drop.user.external_id                      = '';
 orderRequest.drop.user.full_address.address             = '';
-orderRequest.drop.user.full_address.locality.name     = ''; // Can be skipped, see below
-orderRequest.drop.user.full_address.sub_locality.name = ''; // Can be skipped, see below
-orderRequest.drop.user.full_address.city.name         = '';
+orderRequest.drop.user.full_address.locality.name       = ''; // Can be skipped, see below
+orderRequest.drop.user.full_address.sub_locality.name   = ''; // Can be skipped, see below
+orderRequest.drop.user.full_address.city.name           = '';
 orderRequest.drop.user.full_address.geo.latitude        = "dlat"; // Optional, string format
 orderRequest.drop.user.full_address.geo.longitude       = "dlng"; // Optional, string format
 
@@ -95,10 +95,10 @@ var options = {
 };
 
 runnr.createShipment(orderRequest, options, function(error, response) {
-  if (error == null) {
-    console.log(response);
+  if (error) {
+    console.error(error);
   } else {
-    console.error(response);
+    console.log(response);
   }
 });
 ```
